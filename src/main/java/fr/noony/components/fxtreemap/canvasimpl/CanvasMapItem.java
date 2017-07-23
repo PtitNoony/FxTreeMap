@@ -38,7 +38,7 @@ public class CanvasMapItem implements MapItem {
     private final Rect rect;
     private final double itemPercentage;
 
-    public CanvasMapItem(CanvasMapModel model, MapData data, double percentage, double itemSize) {
+    public CanvasMapItem(CanvasMapModel model, MapData data, double percentage) {
         mapModel = model;
         itemData = data;
         itemPercentage = percentage;
@@ -79,6 +79,5 @@ public class CanvasMapItem implements MapItem {
     public Rect getBounds() {
         return rect;
     }
-
 
 }

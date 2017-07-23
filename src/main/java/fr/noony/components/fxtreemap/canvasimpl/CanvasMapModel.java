@@ -45,7 +45,7 @@ public class CanvasMapModel implements MapModel {
         totalArea = width * height;
         totalValue = data.stream().mapToDouble(item -> item.getValue()).sum();
         modelData.forEach(d -> {
-            CanvasMapItem mapItem = new CanvasMapItem(CanvasMapModel.this, d, d.getValue() / totalValue, totalArea);
+            CanvasMapItem mapItem = new CanvasMapItem(CanvasMapModel.this, d, d.getValue() / totalValue);
             mapItems.add(mapItem);
         });
     }

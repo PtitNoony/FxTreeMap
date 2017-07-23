@@ -45,7 +45,7 @@ public class FxMapModel implements MapModel {
         totalArea = width * height;
         totalValue = data.stream().mapToDouble(item -> item.getValue()).sum();
         modelData.forEach(d -> {
-            FxMapItem mapItem = new FxMapItem(FxMapModel.this, d, d.getValue() / totalValue, totalArea);
+            FxMapItem mapItem = new FxMapItem(FxMapModel.this, d, d.getValue() / totalValue);
             mapItems.add(mapItem);
         });
     }

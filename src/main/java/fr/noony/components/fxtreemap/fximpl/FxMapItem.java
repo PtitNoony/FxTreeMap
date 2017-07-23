@@ -41,7 +41,7 @@ public class FxMapItem implements MapItem {
     private final Rectangle rectangle;
     private final double itemPercentage;
 
-    public FxMapItem(FxMapModel model, MapData data, double percentage, double itemSize) {
+    public FxMapItem(FxMapModel model, MapData data, double percentage) {
         mapModel = model;
         itemData = data;
         itemPercentage = percentage;

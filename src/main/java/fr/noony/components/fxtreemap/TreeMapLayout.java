@@ -30,12 +30,11 @@ import java.util.List;
  * Huizing, and Jarke J. van Wijk
  *
  * Squarified Treemaps https://www.win.tue.nl/~vanwijk/stm.pdf
+ *
  * @author ahamon
  * @author tadas-subonis
  */
 public class TreeMapLayout {
-
-    private int mid = 0;
 
     public void layout(MapModel model, Rect bounds) {
         layout(model.getItems(), bounds);
@@ -50,9 +49,6 @@ public class TreeMapLayout {
         }
         //
         layout(
-                //                (MapItem[]) items.stream()
-                //                .sorted((a, b) -> -Double.compare(a.getValue(), b.getValue())).toArray(),
-                //                //                        .collect(Collectors.toList()),
                 sortDescending(array),
                 0,
                 items.size() - 1,
@@ -80,7 +76,7 @@ public class TreeMapLayout {
             items[start].setBounds(bounds);
         }
 
-        this.mid = start;
+        int mid = start;
         while (mid < end) {
             if (highestAspect(items, start, mid, bounds) > highestAspect(items, start, mid + 1, bounds)) {
                 mid++;
