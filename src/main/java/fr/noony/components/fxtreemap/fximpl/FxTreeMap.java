@@ -186,6 +186,7 @@ public class FxTreeMap extends TreeMap {
                     Pair<MapData, FxMapModel> currentLevel = mapLevels.get(index);
                     currentData = currentLevel.getKey();
                     currentModel = currentLevel.getValue();
+                    currentModel.addPropertyChangeListener(this);
                     break;
                 }
             }
