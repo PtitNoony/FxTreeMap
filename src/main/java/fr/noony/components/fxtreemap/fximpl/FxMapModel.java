@@ -28,6 +28,7 @@ import fr.noony.components.fxtreemap.MapModel;
 import fr.noony.components.fxtreemap.TreeMapStyle;
 import fr.noony.components.fxtreemap.TreeMapUtils;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.LinkedList;
 import java.util.List;
@@ -76,6 +77,14 @@ public class FxMapModel implements MapModel {
             default:
                 throw new UnsupportedOperationException(evt.getPropertyName());
         }
+    }
+    
+    public void addPropertyChangeListener(PropertyChangeListener listener){
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+    
+    public void removePropertyChangeListener(PropertyChangeListener listener){
+        propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
     public void setTreeMapStyle(TreeMapStyle newStyle) {

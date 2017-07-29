@@ -65,7 +65,6 @@ public class FxTreeMap extends TreeMap {
     private BreadCrumbBar<MapData> breadCrumbBar;
     private TreeItem<MapData> barContent;
 
-    private final MapData dummyRootData;
     private FxMapModel currentModel;
     private MapData currentData = null;
     private List<Pair<MapData, FxMapModel>> mapLevels;
@@ -78,7 +77,7 @@ public class FxTreeMap extends TreeMap {
         treeMapLayout = new TreeMapLayout();
         mapLevels = new LinkedList<>();
         model = new FxMapModel(FxTreeMap.this, data, getWidth(), getHeight());
-        dummyRootData = new SimpleMapData("root", 0);
+        MapData dummyRootData = new SimpleMapData("root", 0);
         mapLevels.add(new Pair<>(dummyRootData, model));
         currentModel = model;
         model.setTreeMapStyle(style);
@@ -145,11 +144,8 @@ public class FxTreeMap extends TreeMap {
             MapData data = (MapData) evt.getNewValue();
             FxMapModel newDataModel = new FxMapModel(this, data.getChildrenData(), 0, 0);
             newDataModel.setTreeMapStyle(style);
-            System.err.println(newDataModel.getItems());
-            if (currentModel != null) {
-                if (currentModel != model) {
-                    // remove ppty change
-                }
+            if (currentModel != null && !currentModel.equals(model)) {
+                currentModel.removePropertyChangeListener(this);
             }
             currentModel = newDataModel;
             currentData = data;
@@ -158,6 +154,15 @@ public class FxTreeMap extends TreeMap {
             pane.getChildren().setAll(currentModel.getFxItems().stream().map(i -> i.getNode()).collect(Collectors.toList()));
             requestLayoutUpdate();
         }
+    }
+
+    /**
+     * Set the spacing value between the BreadCrumbBar and the treemap items
+     *
+     * @param spacing new spacing value
+     */
+    public void set(double spacing) {
+        layout.setSpacing(spacing);
     }
 
     @Override
@@ -172,7 +177,7 @@ public class FxTreeMap extends TreeMap {
 
     private void handleBreadCrumbEvent(BreadCrumbActionEvent<MapData> bae) {
         MapData clickedData = bae.getSelectedCrumb().getValue();
-        if (clickedData != currentData) {
+        if (!clickedData.equals(currentData)) {
             int index = -1;
             // to be optimized
             for (int i = 0; i < mapLevels.size(); i++) {
