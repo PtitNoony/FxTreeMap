@@ -11,7 +11,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mainClass>fr.noony.components.fxtreemap.MainApp</mainClass>
+        <mainClass>fr.noony.components.fxtreemap.sample.MainApp</mainClass>
     </properties>
 
     <organization>

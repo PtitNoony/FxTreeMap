@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.noony.components.fxtreemap;
+package fr.noony.components.fxtreemap.sample;
 
 import javafx.application.Application;
 import static javafx.application.Application.launch;

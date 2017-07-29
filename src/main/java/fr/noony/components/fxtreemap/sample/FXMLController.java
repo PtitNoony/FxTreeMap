@@ -21,8 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fr.noony.components.fxtreemap;
+package fr.noony.components.fxtreemap.sample;
 
+import fr.noony.components.fxtreemap.AggredatedData;
+import fr.noony.components.fxtreemap.MapData;
+import fr.noony.components.fxtreemap.SimpleMapData;
 import fr.noony.components.fxtreemap.canvasimpl.CanvasTreeMap;
 import fr.noony.components.fxtreemap.fximpl.FxTreeMap;
 import java.net.URL;
@@ -75,12 +78,20 @@ public class FXMLController implements Initializable {
 
     private List<MapData> createDataSet2() {
         AggredatedData data1 = new AggredatedData("data1");
-        SimpleMapData data1_1 = new SimpleMapData("data1_1", 1.0);
-        SimpleMapData data1_2 = new SimpleMapData("data1_2", 2.0);
+        AggredatedData data1_1 = new AggredatedData("data1_1");
+        SimpleMapData data1_1_1 = new SimpleMapData("data1_1_1", 0.5);
+        SimpleMapData data1_1_2 = new SimpleMapData("data1_1_2", 1.0);
+        SimpleMapData data1_1_3 = new SimpleMapData("data1_1_3", 2.0);
+        data1_1.addChildrenData(data1_1_1);
+        data1_1.addChildrenData(data1_1_2);
+        data1_1.addChildrenData(data1_1_3);
+        SimpleMapData data1_2 = new SimpleMapData("data1_2", 6.0);
         SimpleMapData data1_3 = new SimpleMapData("data1_3", 3.0);
+        SimpleMapData data1_4 = new SimpleMapData("data1_4", 1.0);
         data1.addChildrenData(data1_1);
         data1.addChildrenData(data1_2);
         data1.addChildrenData(data1_3);
+        data1.addChildrenData(data1_4);
         SimpleMapData data2 = new SimpleMapData("data2", 3.0);
         SimpleMapData data3 = new SimpleMapData("data3", 2.0);
         SimpleMapData data4 = new SimpleMapData("data4", 2.0);
