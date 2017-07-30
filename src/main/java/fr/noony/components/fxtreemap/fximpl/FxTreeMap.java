@@ -32,8 +32,9 @@ import fr.noony.components.fxtreemap.TreeMapStyle;
 import fr.noony.components.fxtreemap.TreeMapUtils;
 import impl.org.controlsfx.skin.BreadCrumbBarSkin;
 import java.beans.PropertyChangeEvent;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -44,7 +45,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.util.Pair;
 
 import org.controlsfx.control.BreadCrumbBar;
 import org.controlsfx.control.BreadCrumbBar.BreadCrumbActionEvent;
@@ -63,11 +63,11 @@ public class FxTreeMap extends TreeMap {
     private VBox layout;
     private Pane pane;
     private BreadCrumbBar<MapData> breadCrumbBar;
-    private TreeItem<MapData> barContent;
-
+    private MapData dummyRootData;
     private FxMapModel currentModel;
     private MapData currentData = null;
-    private List<Pair<MapData, FxMapModel>> mapLevels;
+    private Map<MapData, TreeItem<MapData>> treeItems;
+    private Map<MapData, FxMapModel> mapLevels;
 
     private TreeMapStyle style = new TreeMapStyle();
 
@@ -75,14 +75,17 @@ public class FxTreeMap extends TreeMap {
         super(withLayoutDelay);
         //
         treeMapLayout = new TreeMapLayout();
-        mapLevels = new LinkedList<>();
+        mapLevels = new HashMap<>();
+        treeItems = new HashMap<>();
         model = new FxMapModel(FxTreeMap.this, data, getWidth(), getHeight());
-        MapData dummyRootData = new SimpleMapData("root", 0);
-        mapLevels.add(new Pair<>(dummyRootData, model));
+        dummyRootData = new SimpleMapData("root", 0);
+        mapLevels.put(dummyRootData, model);
+//        mapLevels.add(new Pair<>(dummyRootData, model));
         currentModel = model;
         model.setTreeMapStyle(style);
         //
         layout = new VBox(8);
+        //
         breadCrumbBar = new BreadCrumbBar();
         pane = new Pane();
         pane.getChildren().addAll(model.getFxItems().stream().map(i -> i.getNode()).collect(Collectors.toList()));
@@ -96,10 +99,9 @@ public class FxTreeMap extends TreeMap {
         AnchorPane.setRightAnchor(layout, 0.0);
         AnchorPane.setTopAnchor(layout, 0.0);
         //
-        barContent = BreadCrumbBar.buildTreeModel(dummyRootData);
-        breadCrumbBar.setSelectedCrumb(barContent);
+        createBar();
         //
-        breadCrumbBar.setAutoNavigationEnabled(false);
+        breadCrumbBar.setAutoNavigationEnabled(true);
         breadCrumbBar.setOnCrumbAction((BreadCrumbActionEvent<MapData> bae) -> handleBreadCrumbEvent(bae));
         breadCrumbBar.setCrumbFactory((TreeItem<MapData> param) -> {
             String label = param != null && param.getValue() != null ? param.getValue().getName() : "?";
@@ -142,14 +144,15 @@ public class FxTreeMap extends TreeMap {
     public void propertyChange(PropertyChangeEvent evt) {
         if (TreeMapUtils.ITEM_CLICKED.equals(evt.getPropertyName())) {
             MapData data = (MapData) evt.getNewValue();
-            FxMapModel newDataModel = new FxMapModel(this, data.getChildrenData(), 0, 0);
-            newDataModel.setTreeMapStyle(style);
-            if (currentModel != null && !currentModel.equals(model)) {
-                currentModel.removePropertyChangeListener(this);
+            if (!mapLevels.containsKey(data)) {
+                FxMapModel newDataModel = new FxMapModel(this, data.getChildrenData(), 0, 0);
+                newDataModel.setTreeMapStyle(style);
+                mapLevels.put(data, newDataModel);
+                currentModel = newDataModel;
+            } else {
+                currentModel = mapLevels.get(data);
             }
-            currentModel = newDataModel;
             currentData = data;
-            mapLevels.add(new Pair<>(data, newDataModel));
             updateBreadCrumbBar();
             pane.getChildren().setAll(currentModel.getFxItems().stream().map(i -> i.getNode()).collect(Collectors.toList()));
             requestLayoutUpdate();
@@ -178,27 +181,44 @@ public class FxTreeMap extends TreeMap {
     private void handleBreadCrumbEvent(BreadCrumbActionEvent<MapData> bae) {
         MapData clickedData = bae.getSelectedCrumb().getValue();
         if (!clickedData.equals(currentData)) {
-            int index = -1;
-            // to be optimized
-            for (int i = 0; i < mapLevels.size(); i++) {
-                if (mapLevels.get(i).getKey() == clickedData) {
-                    index = i;
-                    Pair<MapData, FxMapModel> currentLevel = mapLevels.get(index);
-                    currentData = currentLevel.getKey();
-                    currentModel = currentLevel.getValue();
-                    currentModel.addPropertyChangeListener(this);
-                    break;
-                }
+            currentData = clickedData;
+            if (!mapLevels.containsKey(currentData)) {
+                LOG.log(Level.SEVERE, "Could not find map item for data :: {0}", currentData.getName());
+            } else {
+                currentModel = mapLevels.get(currentData);
             }
-            mapLevels = mapLevels.subList(0, index + 1);
             pane.getChildren().setAll(currentModel.getFxItems().stream().map(i -> i.getNode()).collect(Collectors.toList()));
-            updateBreadCrumbBar();
             requestLayoutUpdate();
         }
     }
 
+    private void createBar() {
+        TreeItem<MapData> root = new TreeItem<>(dummyRootData);
+        model.getData().stream()
+                .filter(data -> data.hasChildrenData())
+                .map(data -> {
+                    TreeItem<MapData> item = new TreeItem<>(data);
+                    createDataChildrenItems(data, item);
+                    treeItems.put(data, item);
+                    return item;
+                }).forEachOrdered(item -> root.getChildren().add(item)
+        );
+        breadCrumbBar.setSelectedCrumb(root);
+    }
+
+    private void createDataChildrenItems(MapData parentData, TreeItem<MapData> parentTreeItem) {
+        parentData.getChildrenData().stream()
+                .filter(childData -> childData.hasChildrenData())
+                .map(childData -> {
+                    TreeItem<MapData> item = new TreeItem<>(childData);
+                    treeItems.put(childData, item);
+                    createDataChildrenItems(childData, item);
+                    return item;
+                }).forEachOrdered(item -> parentTreeItem.getChildren().add(item)
+        );
+    }
+
     private void updateBreadCrumbBar() {
-        barContent = BreadCrumbBar.buildTreeModel(mapLevels.stream().map(l -> l.getKey()).toArray(MapData[]::new));
-        breadCrumbBar.setSelectedCrumb(barContent);
+        breadCrumbBar.setSelectedCrumb(treeItems.get(currentData));
     }
 }
