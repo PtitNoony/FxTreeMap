@@ -19,10 +19,13 @@ I welcome ideas for missing features/architectures...
 This version uses a set a `javafx.scene.shape.Rectangle` to draw the treemap.
 It also allows more flexibility (on the implementation side) to add new features.
 
+![Alt text](/src/main/resources/readme/FxTreeMap_Example.png?raw=true "FxTreeMap")
 
 ### CanvasTreeMap
 
 This component uses a `javafx.scene.canvas.Canvas` to draw the treemap.
+
+![Alt text](/src/main/resources/readme/FxTreeMap_Example_canvas.png?raw=true "CanvasTreeMap")
 
 ## How to
 
