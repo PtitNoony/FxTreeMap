@@ -14,6 +14,18 @@ This small project is in its very early days and features may not be stable.
 SO, feel free to request changes!!
 I welcome ideas for missing features/architectures...
 
+## Usage
+
+If using maven, one can add the following dependency:
+
+```xml
+<dependency>
+  <groupId>com.github.ptitnoony.components</groupId>
+  <artifactId>FxTreeMap</artifactId>
+  <version>0.1</version>
+</dependency>
+```
+
 ## Available tree maps components
 
 ### FxTreeMap (most complete at the moment)
