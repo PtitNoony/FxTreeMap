@@ -22,7 +22,7 @@ If using maven, one can add the following dependency:
 <dependency>
   <groupId>com.github.ptitnoony.components</groupId>
   <artifactId>FxTreeMap</artifactId>
-  <version>0.1</version>
+  <version>0.2-SNAPSHOT</version>
 </dependency>
 ```
 
