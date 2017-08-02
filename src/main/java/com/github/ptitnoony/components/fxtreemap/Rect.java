@@ -25,28 +25,62 @@ package com.github.ptitnoony.components.fxtreemap;
 
 /**
  * A simple class implementing a geometric rectangle
+ *
  * @author tadas-subonis
  */
 public class Rect {
 
+    public static final double DEFAULT_WIDTH = 1.0;
+    public static final double DEFAULT_HEIGHT = 1.0;
+
     public double x, y, w, h;
 
+    /**
+     * Creates a new Rect at (0,0) with default width and height.
+     */
     public Rect() {
-        this(0, 0, 1, 1);
+        this(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
+    /**
+     * Creates a new Rect using the same attributes values as the Rect given as
+     * parameter.
+     *
+     * @param r the Rect to be used for the attributes
+     */
     public Rect(Rect r) {
         setRect(r.x, r.y, r.w, r.h);
     }
 
+    /**
+     * Creates a new Rect with the given parameters.
+     *
+     * @param x coordinates along the X axis
+     * @param y coordinates along the Y axis
+     * @param w width
+     * @param h height
+     */
     public Rect(double x, double y, double w, double h) {
         setRect(x, y, w, h);
     }
 
+    /**
+     * Calculates the Rect aspect ratio.
+     *
+     * @return the Rect aspect ratio
+     */
     public double aspectRatio() {
         return Math.max(w / h, h / w);
     }
 
+    /**
+     * Updates the Rect with the given parameters.
+     *
+     * @param x coordinates along the X axis
+     * @param y coordinates along the Y axis
+     * @param w width
+     * @param h height
+     */
     public final void setRect(double x, double y, double w, double h) {
         this.x = x;
         this.y = y;

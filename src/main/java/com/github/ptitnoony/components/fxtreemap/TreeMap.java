@@ -50,6 +50,10 @@ public abstract class TreeMap implements PropertyChangeListener {
     private double width = TreeMapUtils.DEFAULT_WIDTH;
     private double height = TreeMapUtils.DEFAULT_HEIGHT;
 
+    /**
+     * 
+     * @param withLayoutDelay 
+     */
     public TreeMap(boolean withLayoutDelay) {
         mainNode = new AnchorPane();
         withDelay = withLayoutDelay;
@@ -114,6 +118,8 @@ public abstract class TreeMap implements PropertyChangeListener {
     //
     // Abstract methods
     //
+    public abstract MapData getData();
+    
     public abstract void setBackgroundColor(Color newBackgroundColor);
 
     public abstract void setStoke(Color newStrokeColor);

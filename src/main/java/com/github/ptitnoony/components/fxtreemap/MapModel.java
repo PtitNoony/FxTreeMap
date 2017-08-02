@@ -32,5 +32,16 @@ import java.util.List;
  */
 public interface MapModel extends PropertyChangeListener {
 
+    /**
+     * Get the data represented.
+     *
+     * @return the data
+     */
+    MapData getData();
+
+    /**
+     *
+     * @return the items
+     */
     List<? extends MapItem> getItems();
 }

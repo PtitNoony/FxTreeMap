@@ -31,17 +31,55 @@ import java.util.List;
  */
 public interface MapData {
 
+    /**
+     * Get the data value.
+     *
+     * @return the data value
+     */
     double getValue();
 
+    /**
+     * Set the data value. If the data has children data, their value will be
+     * set with the same percentage of the value they use to have before the
+     * setValue is applied.
+     *
+     * @param newValue the new data value
+     */
     void setValue(double newValue);
 
+    /**
+     * Get the data name.
+     *
+     * @return the data name
+     */
     String getName();
 
+    /**
+     * Set the data name.
+     *
+     * @param newName the new data name
+     */
     void setName(String newName);
 
+    /**
+     * If the data is an aggregation of children data.
+     *
+     * @return if the data is an aggregation of children data
+     */
     boolean hasChildrenData();
-    
+
+    /**
+     * Get the children aggregated data if any.
+     *
+     * @return the list of aggregated data
+     */
     List<MapData> getChildrenData();
 
+    /**
+     * Add a child data. If the data had no child before, adding a child data
+     * will override the previously set data value.
+     *
+     * @param data the data to be added as a child data to aggregate
+     */
     void addChildrenData(MapData data);
 }

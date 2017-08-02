@@ -40,24 +40,29 @@ import java.util.List;
 public class FxMapModel implements MapModel {
 
     private final List<FxMapItem> mapItems;
-    private final List<MapData> modelData;
+    private final MapData modelData;
     private final PropertyChangeSupport propertyChangeSupport;
     private double totalArea;
     private double totalValue;
     private TreeMapStyle style;
 
-    public FxMapModel(FxTreeMap treeMap, List<MapData> data, double width, double height) {
-        modelData = data;
+    public FxMapModel(FxTreeMap treeMap, MapData mapData, double width, double height) {
+        modelData = mapData;
         mapItems = new LinkedList<>();
         propertyChangeSupport = new PropertyChangeSupport(FxMapModel.this);
         propertyChangeSupport.addPropertyChangeListener(treeMap);
         style = new TreeMapStyle();
         totalArea = width * height;
-        totalValue = data.stream().mapToDouble(item -> item.getValue()).sum();
-        modelData.forEach(d -> {
+        totalValue = modelData.getValue();
+        modelData.getChildrenData().forEach(d -> {
             FxMapItem mapItem = new FxMapItem(FxMapModel.this, d, d.getValue() / totalValue);
             mapItems.add(mapItem);
         });
+    }
+
+    @Override
+    public MapData getData() {
+        return modelData;
     }
 
     @Override
@@ -78,12 +83,12 @@ public class FxMapModel implements MapModel {
                 throw new UnsupportedOperationException(evt.getPropertyName());
         }
     }
-    
-    public void addPropertyChangeListener(PropertyChangeListener listener){
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);
     }
-    
-    public void removePropertyChangeListener(PropertyChangeListener listener){
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
@@ -110,10 +115,6 @@ public class FxMapModel implements MapModel {
 
     public double getTotalArea() {
         return totalArea;
-    }
-
-    public List<MapData> getData() {
-        return modelData;
     }
 
     protected List<FxMapItem> getFxItems() {

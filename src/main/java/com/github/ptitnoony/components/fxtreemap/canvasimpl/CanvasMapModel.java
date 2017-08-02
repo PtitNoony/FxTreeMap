@@ -36,19 +36,24 @@ import java.util.List;
 public class CanvasMapModel implements MapModel {
 
     private final List<CanvasMapItem> mapItems;
-    private final List<MapData> modelData;
+    private final MapData modelData;
     private double totalArea;
     private double totalValue;
 
-    public CanvasMapModel(List<MapData> data, double width, double height) {
+    public CanvasMapModel(MapData data, double width, double height) {
         modelData = data;
         mapItems = new LinkedList<>();
         totalArea = width * height;
-        totalValue = data.stream().mapToDouble(item -> item.getValue()).sum();
-        modelData.forEach(d -> {
+        totalValue = data.getValue();
+        modelData.getChildrenData().forEach(d -> {
             CanvasMapItem mapItem = new CanvasMapItem(CanvasMapModel.this, d, d.getValue() / totalValue);
             mapItems.add(mapItem);
         });
+    }
+
+    @Override
+    public MapData getData() {
+        return modelData;
     }
 
     @Override
@@ -71,10 +76,6 @@ public class CanvasMapModel implements MapModel {
 
     public double getTotalArea() {
         return totalArea;
-    }
-
-    public List<MapData> getData() {
-        return modelData;
     }
 
     protected List<CanvasMapItem> getCanvasItems() {

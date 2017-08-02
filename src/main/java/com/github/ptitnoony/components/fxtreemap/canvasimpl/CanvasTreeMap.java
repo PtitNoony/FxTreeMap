@@ -29,7 +29,6 @@ import com.github.ptitnoony.components.fxtreemap.TreeMap;
 import com.github.ptitnoony.components.fxtreemap.TreeMapLayout;
 import com.github.ptitnoony.components.fxtreemap.TreeMapStyle;
 import java.beans.PropertyChangeEvent;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.canvas.Canvas;
@@ -57,7 +56,7 @@ public class CanvasTreeMap extends TreeMap {
     private double borderRadius = 0;
     private double strokeWidth = 1;
 
-    public CanvasTreeMap(List<MapData> data, boolean withLayoutDelay) {
+    public CanvasTreeMap(MapData data, boolean withLayoutDelay) {
         super(withLayoutDelay);
         canvas = new Canvas(getWidth(), getHeight());
         gContext = canvas.getGraphicsContext2D();
@@ -68,8 +67,13 @@ public class CanvasTreeMap extends TreeMap {
         requestLayoutUpdate();
     }
 
-    public CanvasTreeMap(List<MapData> data) {
+    public CanvasTreeMap(MapData data) {
         this(data, false);
+    }
+
+    @Override
+    public MapData getData() {
+        return model.getData();
     }
 
     @Override
@@ -109,7 +113,7 @@ public class CanvasTreeMap extends TreeMap {
 
     @Override
     protected void applyLayout() {
-        LOG.log(Level.INFO, "Applying layout update");
+        LOG.log(Level.FINE, "Applying layout update");
         model.setSize(getWidth(), getHeight());
         treeMapLayout.layout(model, new Rect(0, 0, getWidth(), getHeight()));
         canvas.setWidth(getWidth());

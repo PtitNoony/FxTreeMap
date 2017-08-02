@@ -30,21 +30,31 @@ package com.github.ptitnoony.components.fxtreemap;
 public interface MapItem {
 
     /**
-     * Get the MapItem data
+     * Get the MapItem data.
      *
      * @return the data the MapItem represents
      */
     MapData getData();
 
     /**
-     * Get the MapItem' data value
+     * Get the MapItem' data value.
      *
      * @return the MapItem data value
      */
     double getValue();
 
+    /**
+     * Get the corresponding data percentage.
+     *
+     * @return the percentage of the represented data in its parent
+     */
     double getPercentage();
 
+    /**
+     * Get the pixel area of the item.
+     *
+     * @return the pixel area of the item
+     */
     double getSize();
 
     /**

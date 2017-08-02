@@ -29,8 +29,6 @@ import com.github.ptitnoony.components.fxtreemap.SimpleMapData;
 import com.github.ptitnoony.components.fxtreemap.canvasimpl.CanvasTreeMap;
 import com.github.ptitnoony.components.fxtreemap.fximpl.FxTreeMap;
 import java.net.URL;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -51,13 +49,13 @@ public class FXMLController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        List<MapData> data1 = createDataSet1();
-        List<MapData> data2 = createDataSet2();
+        MapData data1 = createDataSet1();
+        MapData data2 = createDataSet2();
         createFxTreeMap(data2);
         createCanvasTreeMap(data1);
     }
 
-    private List<MapData> createDataSet1() {
+    private MapData createDataSet1() {
         SimpleMapData data1 = new SimpleMapData("data1", 6.0);
         SimpleMapData data2 = new SimpleMapData("data2", 6.0);
         SimpleMapData data3 = new SimpleMapData("data3", 4.0);
@@ -65,18 +63,11 @@ public class FXMLController implements Initializable {
         SimpleMapData data5 = new SimpleMapData("data5", 2.0);
         SimpleMapData data6 = new SimpleMapData("data6", 2.0);
         SimpleMapData data7 = new SimpleMapData("data7", 1.0);
-        List<MapData> data = new LinkedList<>();
-        data.add(data1);
-        data.add(data2);
-        data.add(data3);
-        data.add(data4);
-        data.add(data5);
-        data.add(data6);
-        data.add(data7);
-        return data;
+        //
+        return new AggredatedData("data-set1", data1, data2, data3, data4, data5, data6, data7);
     }
 
-    private List<MapData> createDataSet2() {
+    private MapData createDataSet2() {
         AggredatedData data1 = new AggredatedData("data1");
         AggredatedData data1_1 = new AggredatedData("data1_1");
         SimpleMapData data1_1_1 = new SimpleMapData("data1_1_1", 0.5);
@@ -96,16 +87,11 @@ public class FXMLController implements Initializable {
         SimpleMapData data3 = new SimpleMapData("data3", 2.0);
         SimpleMapData data4 = new SimpleMapData("data4", 2.0);
         SimpleMapData data5 = new SimpleMapData("data5", 1.0);
-        List<MapData> data = new LinkedList<>();
-        data.add(data1);
-        data.add(data2);
-        data.add(data3);
-        data.add(data4);
-        data.add(data5);
-        return data;
+        //
+        return new AggredatedData("data-set2", data1, data2, data3, data4, data5);
     }
 
-    private void createFxTreeMap(List<MapData> data) {
+    private void createFxTreeMap(MapData data) {
         FxTreeMap fxTreeMap = new FxTreeMap(data);
         Node fxTreeMapNode = fxTreeMap.getNode();
         rectAnchorPane.getChildren().add(fxTreeMapNode);
@@ -120,7 +106,7 @@ public class FXMLController implements Initializable {
         fxTreeMap.setPadding(5);
     }
 
-    private void createCanvasTreeMap(List<MapData> data) {
+    private void createCanvasTreeMap(MapData data) {
         CanvasTreeMap canvasTreeMap = new CanvasTreeMap(data);
         Node canvasTreeMapNode = canvasTreeMap.getNode();
         canvasAnchorPane.getChildren().add(canvasTreeMapNode);
