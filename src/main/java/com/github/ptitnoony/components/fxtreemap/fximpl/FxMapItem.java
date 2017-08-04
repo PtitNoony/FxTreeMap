@@ -97,7 +97,7 @@ public class FxMapItem implements MapItem {
 
     @Override
     public void setBounds(Rect bounds) {
-        setBounds(bounds.x, bounds.y, bounds.w, bounds.h);
+        setBounds(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
     }
 
     @Override
@@ -194,10 +194,10 @@ public class FxMapItem implements MapItem {
      * Applies the layout values set up using the setBounds methods.
      */
     protected void applyLayout() {
-        rectangle.setX(rect.x + padding);
-        rectangle.setY(rect.y + padding);
-        rectangle.setWidth(rect.w - 2.0 * padding);
-        rectangle.setHeight(rect.h - 2.0 * padding);
+        rectangle.setX(rect.getX() + padding);
+        rectangle.setY(rect.getY() + padding);
+        rectangle.setWidth(rect.getWidth() - 2.0 * padding);
+        rectangle.setHeight(rect.getHeight() - 2.0 * padding);
     }
 
     private void initInteractivity() {

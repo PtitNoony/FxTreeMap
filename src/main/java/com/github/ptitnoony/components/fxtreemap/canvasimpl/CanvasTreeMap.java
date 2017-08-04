@@ -132,17 +132,17 @@ public class CanvasTreeMap extends TreeMap {
         model.getCanvasItems().forEach(
                 item -> {
                     gContext.fillRoundRect(
-                            item.getBounds().x + padding,
-                            item.getBounds().y + padding,
-                            item.getBounds().w - 2 * padding,
-                            item.getBounds().h - 2 * padding,
+                            item.getBounds().getX() + padding,
+                            item.getBounds().getY() + padding,
+                            item.getBounds().getWidth() - 2 * padding,
+                            item.getBounds().getHeight() - 2 * padding,
                             borderRadius,
                             borderRadius);
                     gContext.strokeRoundRect(
-                            item.getBounds().x + padding,
-                            item.getBounds().y + padding,
-                            item.getBounds().w - 2 * padding,
-                            item.getBounds().h - 2 * padding,
+                            item.getBounds().getX() + padding,
+                            item.getBounds().getY() + padding,
+                            item.getBounds().getWidth() - 2 * padding,
+                            item.getBounds().getHeight() - 2 * padding,
                             borderRadius,
                             borderRadius);
                 }

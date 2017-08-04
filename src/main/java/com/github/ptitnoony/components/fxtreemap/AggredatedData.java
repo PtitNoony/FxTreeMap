@@ -40,12 +40,24 @@ public class AggredatedData implements MapData {
     private String name;
     private double value;
 
+    /**
+     * Creates an aggregated data from the given list of MapData.
+     *
+     * @param dataCollectionName the data name
+     * @param dataElements list containing data to be aggregated as children
+     */
     public AggredatedData(String dataCollectionName, List<MapData> dataElements) {
         name = dataCollectionName;
         datas = new LinkedList<>(dataElements);
         recalculate();
     }
 
+    /**
+     * Creates an aggregated data from the given data elements.
+     *
+     * @param dataCollectionName the data name
+     * @param dataElements the data elements to be added as children
+     */
     public AggredatedData(String dataCollectionName, MapData... dataElements) {
         name = dataCollectionName;
         datas = new LinkedList<>();
@@ -53,10 +65,22 @@ public class AggredatedData implements MapData {
         recalculate();
     }
 
-    public AggredatedData() {
-        name = "";
+    /**
+     * Creates a new AggredatedData with TreeMapUtils.DEFAULT_DATA_VALUE.
+     *
+     * @param dataCollectionName the data name
+     */
+    public AggredatedData(String dataCollectionName) {
+        name = dataCollectionName;
         datas = new LinkedList<>();
-        value = 0;
+        value = TreeMapUtils.DEFAULT_DATA_VALUE;
+    }
+
+    /**
+     * Creates a new AggredatedData with TreeMapUtils.DEFAULT_DATA_VALUE.
+     */
+    public AggredatedData() {
+        this("");
     }
 
     @Override
@@ -66,8 +90,15 @@ public class AggredatedData implements MapData {
 
     @Override
     public void setValue(double newValue) {
+        if (newValue < 0.0) {
+            return;
+        }
         Map<MapData, Double> percentages = new HashMap<>();
-        datas.forEach(data -> percentages.put(data, data.getValue() / value));
+        if (Math.abs(value) < TreeMapUtils.EPSILON) {
+            datas.forEach(data -> percentages.put(data, 0.0));
+        } else {
+            datas.forEach(data -> percentages.put(data, data.getValue() / value));
+        }
         value = newValue;
         percentages.forEach((data, percentage) -> data.setValue(value * percentage));
     }
@@ -94,8 +125,18 @@ public class AggredatedData implements MapData {
 
     @Override
     public void addChildrenData(MapData data) {
-        datas.add(data);
-        recalculate();
+        if (data != null) {
+            datas.add(data);
+            recalculate();
+        }
+    }
+
+    @Override
+    public void removeChildrenData(MapData data) {
+        if (datas.contains(data)) {
+            datas.remove(data);
+            recalculate();
+        }
     }
 
     private void recalculate() {

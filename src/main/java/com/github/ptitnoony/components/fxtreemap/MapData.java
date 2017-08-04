@@ -41,7 +41,7 @@ public interface MapData {
     /**
      * Set the data value. If the data has children data, their value will be
      * set with the same percentage of the value they use to have before the
-     * setValue is applied.
+     * setValue is applied. The value must be equal or greater to 0.
      *
      * @param newValue the new data value
      */
@@ -82,4 +82,11 @@ public interface MapData {
      * @param data the data to be added as a child data to aggregate
      */
     void addChildrenData(MapData data);
+
+    /**
+     * Remove a child data.
+     *
+     * @param data the data to be removed
+     */
+    void removeChildrenData(MapData data);
 }

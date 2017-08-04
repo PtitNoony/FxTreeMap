@@ -67,7 +67,7 @@ public class CanvasMapItem implements MapItem {
 
     @Override
     public void setBounds(Rect bounds) {
-        setBounds(bounds.x, bounds.y, bounds.w, bounds.h);
+        setBounds(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
     }
 
     @Override

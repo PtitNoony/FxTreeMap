@@ -21,8 +21,8 @@ If using maven, one can add the following dependency:
 ```xml
 <dependency>
   <groupId>com.github.ptitnoony.components</groupId>
-  <artifactId>FxTreeMap</artifactId>
-  <version>0.2-SNAPSHOT</version>
+  <artifactId>fxtreemap</artifactId>
+  <version>0.2</version>
 </dependency>
 ```
 
@@ -51,10 +51,7 @@ The main examples are available in the `main` class. Here is an extract of the c
         SimpleMapData data1 = new SimpleMapData("data1", 6.0);
         ...
         SimpleMapData data7 = new SimpleMapData("data7", 1.0);
-        List<MapData> data = new LinkedList<>();
-        data.add(data1);
-        ...
-        data.add(data7);
+        AggredatedData data = new AggredatedData("data-set1", data1, data2, data3, data4, data5, data6, data7);
 ``` 
 
 ### Create the treemap component

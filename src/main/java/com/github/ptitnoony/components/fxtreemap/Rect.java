@@ -27,13 +27,20 @@ package com.github.ptitnoony.components.fxtreemap;
  * A simple class implementing a geometric rectangle
  *
  * @author tadas-subonis
+ * @author ahamon
  */
 public class Rect {
 
+    /**
+     * Default width of a Rect: 1.0px
+     */
     public static final double DEFAULT_WIDTH = 1.0;
+    /**
+     * Default height of a Rect: 1.0px
+     */
     public static final double DEFAULT_HEIGHT = 1.0;
 
-    public double x, y, w, h;
+    private double x, y, w, h;
 
     /**
      * Creates a new Rect at (0,0) with default width and height.
@@ -87,4 +94,41 @@ public class Rect {
         this.w = w;
         this.h = h;
     }
+
+    /**
+     * Get x position.
+     *
+     * @return coordinates along the X axis
+     */
+    public double getX() {
+        return x;
+    }
+
+    /**
+     * get y position.
+     *
+     * @return coordinates along the y axis
+     */
+    public double getY() {
+        return y;
+    }
+
+    /**
+     * Get width
+     *
+     * @return width
+     */
+    public double getWidth() {
+        return w;
+    }
+
+    /**
+     * get Height.
+     *
+     * @return height
+     */
+    public double getHeight() {
+        return h;
+    }
+
 }

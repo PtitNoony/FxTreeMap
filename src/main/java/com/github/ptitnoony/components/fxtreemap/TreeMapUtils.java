@@ -33,9 +33,54 @@ public class TreeMapUtils {
     public static final double DEFAULT_WIDTH = 1200;
     public static final double DEFAULT_HEIGHT = 800;
 
+    public static final double DEFAULT_DATA_VALUE = 0.0;
+
     public static final String ITEM_CLICKED = "mapItemClicked";
+
+    /**
+     * arbitrary randomly small number
+     */
+    public static final double EPSILON = 0.00000001;
 
     private TreeMapUtils() {
         // private utility constructor
+    }
+
+    public static void quickSortDesc(MapItem[] inputArr, int lowerIndex, int higherIndex) {
+
+        int i = lowerIndex;
+        int j = higherIndex;
+        // calculate pivot number
+        double pivot = inputArr[lowerIndex + (higherIndex - lowerIndex) / 2].getSize();
+        // Divide into two arrays
+        while (i <= j) {
+            /**
+             * In each iteration, we will identify a number from left side which
+             * is greater then the pivot value, and also we will identify a
+             * number from right side which is less then the pivot value. Once
+             * the search is done, then we exchange both numbers.
+             */
+            while (inputArr[i].getSize() > pivot) {
+                i++;
+            }
+            while (inputArr[j].getSize() < pivot) {
+                j--;
+            }
+            if (i <= j) {
+                MapItem temp = inputArr[i];
+                inputArr[i] = inputArr[j];
+                inputArr[j] = temp;
+                //move index to next position on both sides
+                i++;
+                j--;
+            }
+        }
+        // call quickSort() method recursively
+        if (lowerIndex < j) {
+            quickSortDesc(inputArr, lowerIndex, j);
+        }
+        if (i < higherIndex) {
+            quickSortDesc(inputArr, i, higherIndex);
+        }
     }
 }

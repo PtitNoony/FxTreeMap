@@ -25,6 +25,8 @@ package com.github.ptitnoony.components.fxtreemap;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -32,14 +34,33 @@ import java.util.List;
  */
 public class SimpleMapData implements MapData {
 
+    private static final Logger LOG = Logger.getGlobal();
+
     private String name;
     private double value;
 
+    /**
+     * Create a new SimpleMapData with the given name and value.
+     *
+     * @param dataName the data name
+     * @param dataValue the data value
+     */
     public SimpleMapData(String dataName, double dataValue) {
+        if (dataValue < 0.0) {
+            throw new IllegalArgumentException("value shall be positive, but was " + dataValue);
+        }
+        if (dataName == null) {
+            throw new IllegalArgumentException("name should not be null");
+        }
         name = dataName;
         value = dataValue;
     }
 
+    /**
+     * Create a new SimpleMapData with the given value and an empty name.
+     *
+     * @param dataValue the data value
+     */
     public SimpleMapData(double dataValue) {
         this("", dataValue);
     }
@@ -51,6 +72,9 @@ public class SimpleMapData implements MapData {
 
     @Override
     public void setValue(double newValue) {
+        if (newValue < 0.0) {
+            return;
+        }
         value = newValue;
     }
 
@@ -76,7 +100,14 @@ public class SimpleMapData implements MapData {
 
     @Override
     public void addChildrenData(MapData data) {
-        //
+        String toBeAddedName = data != null ? data.getName() : "NULL";
+        LOG.log(Level.WARNING, "Ignoring the added child [{0}] in {1}", new Object[]{toBeAddedName, name});
+    }
+
+    @Override
+    public void removeChildrenData(MapData data) {
+        String toBeRemovedName = data != null ? data.getName() : "NULL";
+        LOG.log(Level.WARNING, "Ignoring removal of child [{0}] from {1}", new Object[]{toBeRemovedName, name});
     }
 
 }

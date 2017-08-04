@@ -51,8 +51,10 @@ public abstract class TreeMap implements PropertyChangeListener {
     private double height = TreeMapUtils.DEFAULT_HEIGHT;
 
     /**
-     * 
-     * @param withLayoutDelay 
+     * Creates an abstract TreeMap.
+     *
+     * @param withLayoutDelay value to be used to check if re-layout needs to be
+     * delayed.
      */
     public TreeMap(boolean withLayoutDelay) {
         mainNode = new AnchorPane();
@@ -75,16 +77,24 @@ public abstract class TreeMap implements PropertyChangeListener {
         timer.setRepeats(false);
     }
 
+    /**
+     * Creates an abstract TreeMap immediate layout after resize.
+     */
     public TreeMap() {
         this(false);
     }
 
+    /**
+     * Get the JavaFx node to be added to the scene.
+     *
+     * @return the component node to be added to the scene
+     */
     public Node getNode() {
         return mainNode;
     }
 
     /**
-     * 
+     *
      * @return the component's width
      */
     public final double getWidth() {
@@ -92,16 +102,16 @@ public abstract class TreeMap implements PropertyChangeListener {
     }
 
     /**
-     * 
+     *
      * @return the component's height
      */
     public final double getHeight() {
         return height;
     }
 
-    
     /**
-     *  Will trigger a layout update, which timing depends on the withDelay mode activation
+     * Will trigger a layout update, which timing depends on the withDelay mode
+     * activation
      */
     public final void requestLayoutUpdate() {
         if (withDelay) {
@@ -111,6 +121,11 @@ public abstract class TreeMap implements PropertyChangeListener {
         }
     }
 
+    /**
+     * Get the container that will contain the MapItems
+     *
+     * @return the TreeMap item container
+     */
     protected final AnchorPane getContainer() {
         return mainNode;
     }
@@ -118,8 +133,13 @@ public abstract class TreeMap implements PropertyChangeListener {
     //
     // Abstract methods
     //
+    /**
+     * Get the data represented by the TreeMap.
+     *
+     * @return the data represented
+     */
     public abstract MapData getData();
-    
+
     public abstract void setBackgroundColor(Color newBackgroundColor);
 
     public abstract void setStoke(Color newStrokeColor);

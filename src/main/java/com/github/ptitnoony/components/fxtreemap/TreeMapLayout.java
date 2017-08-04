@@ -64,9 +64,8 @@ public class TreeMapLayout {
         }
         MapItem[] inputArr = new MapItem[items.length];
         System.arraycopy(items, 0, inputArr, 0, items.length);
-        int length = inputArr.length;
 
-        quickSortDesc(inputArr, 0, length - 1);
+        TreeMapUtils.quickSortDesc(inputArr, 0, inputArr.length - 1);
 
         return inputArr;
     }
@@ -102,8 +101,8 @@ public class TreeMapLayout {
     }
 
     public Rect layoutRow(MapItem[] items, int start, int end, Rect bounds) {
-        boolean isHorizontal = bounds.w > bounds.h;
-        double total = bounds.w * bounds.h;
+        boolean isHorizontal = bounds.getWidth() > bounds.getWidth();
+        double total = bounds.getWidth() * bounds.getHeight();
         double rowSize = totalSize(items, start, end);
         double rowRatio = rowSize / total;
         double offset = 0;
@@ -113,23 +112,25 @@ public class TreeMapLayout {
             double ratio = items[i].getSize() / rowSize;
 
             if (isHorizontal) {
-                r.x = bounds.x;
-                r.w = bounds.w * rowRatio;
-                r.y = bounds.y + bounds.h * offset;
-                r.h = bounds.h * ratio;
+                r.setRect(
+                        bounds.getX(),
+                        bounds.getY() + bounds.getHeight() * offset,
+                        bounds.getWidth() * rowRatio,
+                        bounds.getHeight() * ratio);
             } else {
-                r.x = bounds.x + bounds.w * offset;
-                r.w = bounds.w * ratio;
-                r.y = bounds.y;
-                r.h = bounds.h * rowRatio;
+                r.setRect(
+                        bounds.getX() + bounds.getWidth() * offset,
+                        bounds.getY(),
+                        bounds.getWidth() * ratio,
+                        bounds.getHeight() * rowRatio);
             }
             items[i].setBounds(r);
             offset += ratio;
         }
         if (isHorizontal) {
-            return new Rect(bounds.x + bounds.w * rowRatio, bounds.y, bounds.w - bounds.w * rowRatio, bounds.h);
+            return new Rect(bounds.getX() + bounds.getWidth() * rowRatio, bounds.getY(), bounds.getWidth() - bounds.getWidth() * rowRatio, bounds.getHeight());
         } else {
-            return new Rect(bounds.x, bounds.y + bounds.h * rowRatio, bounds.w, bounds.h - bounds.h * rowRatio);
+            return new Rect(bounds.getX(), bounds.getY() + bounds.getHeight() * rowRatio, bounds.getWidth(), bounds.getHeight() - bounds.getHeight() * rowRatio);
         }
     }
 
@@ -149,41 +150,4 @@ public class TreeMapLayout {
         return mid;
     }
 
-    private void quickSortDesc(MapItem[] inputArr, int lowerIndex, int higherIndex) {
-
-        int i = lowerIndex;
-        int j = higherIndex;
-        // calculate pivot number
-        double pivot = inputArr[lowerIndex + (higherIndex - lowerIndex) / 2].getSize();
-        // Divide into two arrays
-        while (i <= j) {
-            /**
-             * In each iteration, we will identify a number from left side which
-             * is greater then the pivot value, and also we will identify a
-             * number from right side which is less then the pivot value. Once
-             * the search is done, then we exchange both numbers.
-             */
-            while (inputArr[i].getSize() > pivot) {
-                i++;
-            }
-            while (inputArr[j].getSize() < pivot) {
-                j--;
-            }
-            if (i <= j) {
-                MapItem temp = inputArr[i];
-                inputArr[i] = inputArr[j];
-                inputArr[j] = temp;
-                //move index to next position on both sides
-                i++;
-                j--;
-            }
-        }
-        // call quickSort() method recursively
-        if (lowerIndex < j) {
-            quickSortDesc(inputArr, lowerIndex, j);
-        }
-        if (i < higherIndex) {
-            quickSortDesc(inputArr, i, higherIndex);
-        }
-    }
 }
