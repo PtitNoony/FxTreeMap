@@ -26,10 +26,6 @@ package com.github.ptitnoony.components.fxtreemap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -41,25 +37,6 @@ public class AggredatedDataTest {
 
     private static final Logger LOG = Logger.getGlobal();
 
-
-    public AggredatedDataTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     /**
      * Test of getValue method, of class AggredatedData.
@@ -148,11 +125,11 @@ public class AggredatedDataTest {
      */
     @Test
     public void testAddChildrenData() {
-        MapData data1 = new SimpleMapData("1", 1);
-        MapData data2 = new SimpleMapData("2", 2);
-        MapData data3 = new SimpleMapData("3", 3);
-        MapData data4 = new SimpleMapData("4", 4);
-        AggredatedData instance = new AggredatedData("d", data1, data2, data3, data4);
+        MapData data1 = new SimpleMapData("a", 1);
+        MapData data2 = new SimpleMapData("b", 2);
+        MapData data3 = new SimpleMapData("c", 3);
+        MapData data4 = new SimpleMapData("d", 4);
+        AggredatedData instance = new AggredatedData("d_abcd", data1, data2, data3, data4);
         List<MapData> allData = instance.getChildrenData();
         assertEquals(4, allData.size());
         assertTrue(allData.contains(data1));
@@ -174,7 +151,7 @@ public class AggredatedDataTest {
         MapData data2 = new SimpleMapData("2", value2);
         MapData data3 = new SimpleMapData("3", value3);
         MapData data4 = new SimpleMapData("4", value4);
-        AggredatedData instance = new AggredatedData("d", data1, data2, data3, data4);
+        AggredatedData instance = new AggredatedData("d_1234", data1, data2, data3, data4);
         double initValue = 10;
         assertEquals(initValue, instance.getValue(), TreeMapUtils.EPSILON);
         for (int i = 1; i < 100; i++) {

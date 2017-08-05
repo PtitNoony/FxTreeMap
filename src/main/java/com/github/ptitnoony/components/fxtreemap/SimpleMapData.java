@@ -100,13 +100,13 @@ public class SimpleMapData implements MapData {
 
     @Override
     public void addChildrenData(MapData data) {
-        String toBeAddedName = data != null ? data.getName() : "NULL";
+        String toBeAddedName = data != null ? data.getName() : null;
         LOG.log(Level.WARNING, "Ignoring the added child [{0}] in {1}", new Object[]{toBeAddedName, name});
     }
 
     @Override
     public void removeChildrenData(MapData data) {
-        String toBeRemovedName = data != null ? data.getName() : "NULL";
+        String toBeRemovedName = data != null ? data.getName() : null;
         LOG.log(Level.WARNING, "Ignoring removal of child [{0}] from {1}", new Object[]{toBeRemovedName, name});
     }
 
