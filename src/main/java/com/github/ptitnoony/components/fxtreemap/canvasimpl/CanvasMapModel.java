@@ -38,15 +38,13 @@ public class CanvasMapModel implements MapModel {
     private final List<CanvasMapItem> mapItems;
     private final MapData modelData;
     private double totalArea;
-    private double totalValue;
 
     public CanvasMapModel(MapData data, double width, double height) {
         modelData = data;
         mapItems = new LinkedList<>();
         totalArea = width * height;
-        totalValue = data.getValue();
         modelData.getChildrenData().forEach(d -> {
-            CanvasMapItem mapItem = new CanvasMapItem(CanvasMapModel.this, d, d.getValue() / totalValue);
+            CanvasMapItem mapItem = new CanvasMapItem(CanvasMapModel.this, d);
             mapItems.add(mapItem);
         });
     }
@@ -67,7 +65,7 @@ public class CanvasMapModel implements MapModel {
     }
 
     public double getTotal() {
-        return totalValue;
+        return modelData.getValue();
     }
 
     public void setSize(double width, double height) {

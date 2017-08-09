@@ -60,7 +60,7 @@ public class TreeMapLayout {
 
     public MapItem[] sortDescending(MapItem[] items) {
         if (items == null || items.length == 0) {
-            return null;
+            return new MapItem[0];
         }
         MapItem[] inputArr = new MapItem[items.length];
         System.arraycopy(items, 0, inputArr, 0, items.length);

@@ -37,7 +37,6 @@ public class AggredatedDataTest {
 
     private static final Logger LOG = Logger.getGlobal();
 
-
     /**
      * Test of getValue method, of class AggredatedData.
      */
@@ -147,16 +146,20 @@ public class AggredatedDataTest {
         double value2 = 2.0;
         double value3 = 3.0;
         double value4 = 4.0;
-        MapData data1 = new SimpleMapData("1", value1);
-        MapData data2 = new SimpleMapData("2", value2);
-        MapData data3 = new SimpleMapData("3", value3);
-        MapData data4 = new SimpleMapData("4", value4);
+        MapData data1 = new SimpleMapData("1.", value1);
+        MapData data2 = new SimpleMapData("2.", value2);
+        MapData data3 = new SimpleMapData("3.", value3);
+        MapData data4 = new SimpleMapData("4.", value4);
         AggredatedData instance = new AggredatedData("d_1234", data1, data2, data3, data4);
         double initValue = 10;
         assertEquals(initValue, instance.getValue(), TreeMapUtils.EPSILON);
         for (int i = 1; i < 100; i++) {
             double multiplier = i;
             instance.setValue(initValue * multiplier);
+            assertEquals(value1 * multiplier, data1.getValue(), TreeMapUtils.EPSILON);
+            assertEquals(value2 * multiplier, data2.getValue(), TreeMapUtils.EPSILON);
+            assertEquals(value3 * multiplier, data3.getValue(), TreeMapUtils.EPSILON);
+            assertEquals(value4 * multiplier, data4.getValue(), TreeMapUtils.EPSILON);
             instance.getChildrenData().forEach(data -> {
                 if (data.equals(data1)) {
                     assertEquals(value1 * multiplier, data.getValue(), TreeMapUtils.EPSILON);
@@ -182,6 +185,23 @@ public class AggredatedDataTest {
                 assertEquals(0, data.getValue(), TreeMapUtils.EPSILON);
             }
         });
+
+    }
+
+    @Test
+    public void testPropertyChangeSimple() {
+        double value1 = 1.0;
+        double value2 = 2.0;
+        double value3 = 3.0;
+        double value4 = 4.0;
+        MapData data1 = new SimpleMapData("1", value1);
+        MapData data2 = new SimpleMapData("2", value2);
+        MapData data3 = new SimpleMapData("3", value3);
+        MapData data4 = new SimpleMapData("4", value4);
+        AggredatedData instance = new AggredatedData("d_1234", data1, data2, data3, data4);
+
+        data1.setValue(5);
+        assertEquals(14, instance.getValue(), TreeMapUtils.EPSILON);
 
     }
 

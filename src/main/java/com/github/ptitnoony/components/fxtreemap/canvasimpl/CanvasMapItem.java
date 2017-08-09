@@ -36,12 +36,10 @@ public class CanvasMapItem implements MapItem {
     private final CanvasMapModel mapModel;
     private final MapData itemData;
     private final Rect rect;
-    private final double itemPercentage;
 
-    public CanvasMapItem(CanvasMapModel model, MapData data, double percentage) {
+    public CanvasMapItem(CanvasMapModel model, MapData data) {
         mapModel = model;
         itemData = data;
-        itemPercentage = percentage;
         rect = new Rect();
     }
 
@@ -52,7 +50,7 @@ public class CanvasMapItem implements MapItem {
 
     @Override
     public double getPercentage() {
-        return itemPercentage;
+        return itemData.getValue() / mapModel.getTotal();
     }
 
     @Override
@@ -62,7 +60,7 @@ public class CanvasMapItem implements MapItem {
 
     @Override
     public double getSize() {
-        return itemPercentage * mapModel.getTotalArea();
+        return getPercentage() * mapModel.getTotalArea();
     }
 
     @Override

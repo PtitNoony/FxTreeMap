@@ -43,7 +43,6 @@ public class FxMapModel implements MapModel {
     private final MapData modelData;
     private final PropertyChangeSupport propertyChangeSupport;
     private double totalArea;
-    private double totalValue;
     private TreeMapStyle style;
 
     public FxMapModel(FxTreeMap treeMap, MapData mapData, double width, double height) {
@@ -53,11 +52,11 @@ public class FxMapModel implements MapModel {
         propertyChangeSupport.addPropertyChangeListener(treeMap);
         style = new TreeMapStyle();
         totalArea = width * height;
-        totalValue = modelData.getValue();
         modelData.getChildrenData().forEach(d -> {
-            FxMapItem mapItem = new FxMapItem(FxMapModel.this, d, d.getValue() / totalValue);
+            FxMapItem mapItem = new FxMapItem(FxMapModel.this, d);
             mapItems.add(mapItem);
         });
+        modelData.addPropertyChangeListener(this::handleModelChange);
     }
 
     @Override
@@ -106,7 +105,7 @@ public class FxMapModel implements MapModel {
     }
 
     public double getTotal() {
-        return totalValue;
+        return modelData.getValue();
     }
 
     public void setSize(double width, double height) {
@@ -119,5 +118,11 @@ public class FxMapModel implements MapModel {
 
     protected List<FxMapItem> getFxItems() {
         return mapItems;
+    }
+
+    private void handleModelChange(PropertyChangeEvent event) {
+        if (TreeMapUtils.MAP_DATA_VALUE_CHANGED.equals(event.getPropertyName())) {
+            propertyChangeSupport.firePropertyChange(TreeMapUtils.MAP_DATA_VALUE_CHANGED, null, modelData.getValue());
+        }
     }
 }

@@ -23,12 +23,15 @@
  */
 package com.github.ptitnoony.components.fxtreemap;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -36,9 +39,13 @@ import java.util.Map;
  */
 public class AggredatedData implements MapData {
 
+    private static final Logger LOG = Logger.getGlobal();
+
+    private final PropertyChangeSupport propertyChangeSupport;
     private final List<MapData> datas;
     private String name;
     private double value;
+    private double lastNotifiedValue;
 
     /**
      * Creates an aggregated data from the given list of MapData.
@@ -47,9 +54,12 @@ public class AggredatedData implements MapData {
      * @param dataElements list containing data to be aggregated as children
      */
     public AggredatedData(String dataCollectionName, List<MapData> dataElements) {
+        propertyChangeSupport = new PropertyChangeSupport(AggredatedData.this);
         name = dataCollectionName;
         datas = new LinkedList<>(dataElements);
+        datas.forEach(data -> data.addPropertyChangeListener(this::handleChildValueChanged));
         recalculate();
+        lastNotifiedValue = value;
     }
 
     /**
@@ -59,10 +69,7 @@ public class AggredatedData implements MapData {
      * @param dataElements the data elements to be added as children
      */
     public AggredatedData(String dataCollectionName, MapData... dataElements) {
-        name = dataCollectionName;
-        datas = new LinkedList<>();
-        datas.addAll(Arrays.asList(dataElements));
-        recalculate();
+        this(dataCollectionName, Arrays.asList(dataElements));
     }
 
     /**
@@ -71,9 +78,11 @@ public class AggredatedData implements MapData {
      * @param dataCollectionName the data name
      */
     public AggredatedData(String dataCollectionName) {
+        propertyChangeSupport = new PropertyChangeSupport(AggredatedData.this);
         name = dataCollectionName;
         datas = new LinkedList<>();
         value = TreeMapUtils.DEFAULT_DATA_VALUE;
+        lastNotifiedValue = value;
     }
 
     /**
@@ -93,14 +102,18 @@ public class AggredatedData implements MapData {
         if (newValue < 0.0) {
             return;
         }
-        Map<MapData, Double> percentages = new HashMap<>();
-        if (Math.abs(value) < TreeMapUtils.EPSILON) {
-            datas.forEach(data -> percentages.put(data, 0.0));
+        double percentage;
+        if (newValue < TreeMapUtils.EPSILON) {
+            percentage = 0.0;
         } else {
-            datas.forEach(data -> percentages.put(data, data.getValue() / value));
+            percentage = newValue / value;
         }
+        //
         value = newValue;
-        percentages.forEach((data, percentage) -> data.setValue(value * percentage));
+        datas.forEach(data -> data.setValue(data.getValue() * percentage));
+        //
+        // not necessary since children already send notifications -> to be optimized at component level
+        notifyValueChanged();
     }
 
     @Override
@@ -126,8 +139,10 @@ public class AggredatedData implements MapData {
     @Override
     public void addChildrenData(MapData data) {
         if (data != null) {
+            data.addPropertyChangeListener(this::handleChildValueChanged);
             datas.add(data);
             recalculate();
+            notifyValueChanged();
         }
     }
 
@@ -139,7 +154,31 @@ public class AggredatedData implements MapData {
         }
     }
 
+    @Override
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    @Override
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
+    }
+
     private void recalculate() {
         value = datas.stream().mapToDouble(MapData::getValue).sum();
+    }
+
+    private void handleChildValueChanged(PropertyChangeEvent event) {
+        LOG.log(Level.FINE, "updating value after a change in child {0}", event.getSource());
+        recalculate();
+        notifyValueChanged();
+    }
+
+    private void notifyValueChanged() {
+        // to prevent overflowing upper levels with unnecessary notifications
+        if (Math.abs(value - lastNotifiedValue) > TreeMapUtils.EPSILON) {
+            propertyChangeSupport.firePropertyChange(TreeMapUtils.MAP_DATA_VALUE_CHANGED, null, value);
+            lastNotifiedValue = value;
+        }
     }
 }

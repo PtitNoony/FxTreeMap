@@ -55,8 +55,6 @@ public class FxTreeMap extends TreeMap {
 
     private static final Logger LOG = Logger.getGlobal();
 
-    private static final boolean DEFAULT_IS_INTERACTIVE = true;
-
     private final FxMapModel model;
     private final TreeMapLayout treeMapLayout;
 
@@ -77,6 +75,7 @@ public class FxTreeMap extends TreeMap {
         mapLevels = new HashMap<>();
         treeItems = new HashMap<>();
         model = new FxMapModel(FxTreeMap.this, mapData, getWidth(), getHeight());
+        mapData.addPropertyChangeListener(this::handleModelChange);
         mapLevels.put(model.getData(), model);
         currentModel = model;
         model.setTreeMapStyle(style);
@@ -214,5 +213,11 @@ public class FxTreeMap extends TreeMap {
 
     private void updateBreadCrumbBar() {
         breadCrumbBar.setSelectedCrumb(treeItems.get(currentData));
+    }
+
+    private void handleModelChange(PropertyChangeEvent event) {
+        if (TreeMapUtils.MAP_DATA_VALUE_CHANGED.equals(event.getPropertyName())) {
+            requestLayoutUpdate();
+        }
     }
 }

@@ -23,6 +23,7 @@
  */
 package com.github.ptitnoony.components.fxtreemap;
 
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
 /**
@@ -89,4 +90,19 @@ public interface MapData {
      * @param data the data to be removed
      */
     void removeChildrenData(MapData data);
+
+    /**
+     * Add a property change listener.
+     *
+     * @param listener the listener to be added
+     */
+    void addPropertyChangeListener(PropertyChangeListener listener);
+
+    /**
+     * Remove a property change listener.
+     *
+     * @param listener the listener to be removed
+     */
+    void removePropertyChangeListener(PropertyChangeListener listener);
+
 }

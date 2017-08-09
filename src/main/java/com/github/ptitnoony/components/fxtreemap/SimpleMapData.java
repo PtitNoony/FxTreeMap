@@ -23,6 +23,8 @@
  */
 package com.github.ptitnoony.components.fxtreemap;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -36,6 +38,7 @@ public class SimpleMapData implements MapData {
 
     private static final Logger LOG = Logger.getGlobal();
 
+    private final PropertyChangeSupport propertyChangeSupport;
     private String name;
     private double value;
 
@@ -52,6 +55,7 @@ public class SimpleMapData implements MapData {
         if (dataName == null) {
             throw new IllegalArgumentException("name should not be null");
         }
+        propertyChangeSupport = new PropertyChangeSupport(SimpleMapData.this);
         name = dataName;
         value = dataValue;
     }
@@ -73,9 +77,11 @@ public class SimpleMapData implements MapData {
     @Override
     public void setValue(double newValue) {
         if (newValue < 0.0) {
+            LOG.log(Level.WARNING, "Ignoring set of a negative value ({0} for {1}", new Object[]{newValue, name});
             return;
         }
         value = newValue;
+        propertyChangeSupport.firePropertyChange(TreeMapUtils.MAP_DATA_VALUE_CHANGED, null, value);
     }
 
     @Override
@@ -108,6 +114,16 @@ public class SimpleMapData implements MapData {
     public void removeChildrenData(MapData data) {
         String toBeRemovedName = data != null ? data.getName() : null;
         LOG.log(Level.WARNING, "Ignoring removal of child [{0}] from {1}", new Object[]{toBeRemovedName, name});
+    }
+
+    @Override
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    @Override
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
 }

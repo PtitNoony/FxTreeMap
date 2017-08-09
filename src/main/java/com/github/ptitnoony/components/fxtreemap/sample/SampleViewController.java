@@ -28,19 +28,34 @@ import com.github.ptitnoony.components.fxtreemap.MapData;
 import com.github.ptitnoony.components.fxtreemap.SimpleMapData;
 import com.github.ptitnoony.components.fxtreemap.canvasimpl.CanvasTreeMap;
 import com.github.ptitnoony.components.fxtreemap.fximpl.FxTreeMap;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 /**
  *
  * @author ahamon
  */
-public class FXMLController implements Initializable {
+public final class SampleViewController implements Initializable {
+
+    private static final Logger LOG = Logger.getGlobal();
+
+    /**
+     * Value to translate the control stage from the view stage so they do not
+     * overlap
+     */
+    private static final double DELTA_SCREEN_POSITION = 150;
 
     @FXML
     private AnchorPane rectAnchorPane;
@@ -51,11 +66,12 @@ public class FXMLController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         MapData data1 = createDataSet1();
         MapData data2 = createDataSet2();
-        createFxTreeMap(data2);
-        createCanvasTreeMap(data1);
+        createFxTreeMap(data1);
+        createCanvasTreeMap(data2);
+        createControlView(data1, data2);
     }
 
-    private MapData createDataSet1() {
+    private MapData createDataSet2() {
         SimpleMapData data1 = new SimpleMapData("data1", 6.0);
         SimpleMapData data2 = new SimpleMapData("data2", 6.0);
         SimpleMapData data3 = new SimpleMapData("data3", 4.0);
@@ -64,10 +80,10 @@ public class FXMLController implements Initializable {
         SimpleMapData data6 = new SimpleMapData("data6", 2.0);
         SimpleMapData data7 = new SimpleMapData("data7", 1.0);
         //
-        return new AggredatedData("data-set1", data1, data2, data3, data4, data5, data6, data7);
+        return new AggredatedData("data-set2", data1, data2, data3, data4, data5, data6, data7);
     }
 
-    private MapData createDataSet2() {
+    private MapData createDataSet1() {
         AggredatedData data1 = new AggredatedData("data1");
         AggredatedData data1_1 = new AggredatedData("data1_1");
         SimpleMapData data1_1_1 = new SimpleMapData("data1_1_1", 0.5);
@@ -88,7 +104,7 @@ public class FXMLController implements Initializable {
         SimpleMapData data4 = new SimpleMapData("data4", 2.0);
         SimpleMapData data5 = new SimpleMapData("data5", 1.0);
         //
-        return new AggredatedData("data-set2", data1, data2, data3, data4, data5);
+        return new AggredatedData("data-set1", data1, data2, data3, data4, data5);
     }
 
     private void createFxTreeMap(MapData data) {
@@ -119,5 +135,24 @@ public class FXMLController implements Initializable {
         canvasTreeMap.setStoke(Color.DIMGREY);
         canvasTreeMap.setBorderRadius(8.0);
         canvasTreeMap.setPadding(3);
+    }
+
+    private void createControlView(MapData data1, MapData data2) {
+        Stage stage = new Stage();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("DataControl.fxml"));
+            Parent root = loader.load();
+            DataControlController controller = loader.getController();
+            controller.addData(data1);
+            controller.addData(data2);
+            Scene scene = new Scene(root);
+            stage.setTitle("FxTreeMap Data control view");
+            stage.setScene(scene);
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, "Exception while loading control view: {0}", e);
+        }
+        stage.show();
+        stage.setX(stage.getX() + DELTA_SCREEN_POSITION);
+        stage.setY(stage.getY() + DELTA_SCREEN_POSITION);
     }
 }

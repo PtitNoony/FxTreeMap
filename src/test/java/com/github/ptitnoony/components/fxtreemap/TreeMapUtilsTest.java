@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 Arnaud Hamon
+ * Copyright 2017 Arnaud Hamon.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,40 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.ptitnoony.components.fxtreemap.sample;
+package com.github.ptitnoony.components.fxtreemap;
 
-import javafx.application.Application;
-import static javafx.application.Application.launch;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import org.junit.Assert;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  *
  * @author ahamon
  */
-public final class MainApp extends Application {
-
-    @Override
-    public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("SampleView.fxml"));
-        Scene scene = new Scene(root);
-        stage.setTitle("FxTreeMap Example");
-        stage.setScene(scene);
-        stage.show();
-    }
+public class TreeMapUtilsTest {
 
     /**
-     * The main() method is ignored in correctly deployed JavaFX application.
-     * main() serves only as fallback in case the application can not be
-     * launched through deployment artifacts, e.g., in IDEs with limited FX
-     * support. NetBeans ignores main().
-     *
-     * @param args the command line arguments
+     * Test of quickSortDesc method, of class TreeMapUtils.
      */
-    public static void main(String[] args) {
-        launch(args);
+    @Test
+    public void testQuickSortDesc() {
+        for (int i = 0; i < 25; i++) {
+            MapItem[] data = new MapItem[i];
+            for (int k = 0; k < i; k++) {
+                MapItem item = Mockito.mock(MapItem.class);
+                final double value = Math.random();
+                Mockito.when(item.getSize()).thenReturn(value);
+                data[k] = item;
+            }
+            int lowerIndex = 0;
+            int higherIndex = Math.max(0, data.length - 1);
+            boolean isSorted = TreeMapUtils.quickSortDesc(data, lowerIndex, higherIndex);
+            if (isSorted) {
+                for (int j = 0; j < i - 1; j++) {
+                    Assert.assertTrue(data[j].getSize() >= data[j + 1].getSize());
+                }
+            }
+        }
     }
 
 }

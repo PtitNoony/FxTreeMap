@@ -52,7 +52,6 @@ public class FxMapItem implements MapItem {
     private final MapData itemData;
     private final Rect rect;
     private final Rectangle rectangle;
-    private final double itemPercentage;
     private double padding = 0;
 
     private Color fillColor;
@@ -60,10 +59,9 @@ public class FxMapItem implements MapItem {
     private Color fillOverColor;
     private Color strokeOverColor;
 
-    public FxMapItem(FxMapModel model, MapData data, double percentage) {
+    public FxMapItem(FxMapModel model, MapData data) {
         mapModel = model;
         itemData = data;
-        itemPercentage = percentage;
         rect = new Rect();
         rectangle = new Rectangle();
         applyStyle(model.getStyle());
@@ -82,7 +80,7 @@ public class FxMapItem implements MapItem {
 
     @Override
     public double getPercentage() {
-        return itemPercentage;
+        return itemData.getValue() / mapModel.getTotal();
     }
 
     @Override
@@ -92,7 +90,7 @@ public class FxMapItem implements MapItem {
 
     @Override
     public double getSize() {
-        return itemPercentage * mapModel.getTotalArea();
+        return getPercentage() * mapModel.getTotalArea();
     }
 
     @Override
@@ -207,7 +205,7 @@ public class FxMapItem implements MapItem {
     }
 
     private void handleMouseEntered(MouseEvent event) {
-        LOG.log(Level.FINE, "{0}:: {1}", new Object[]{itemData.getName(), event});
+        LOG.log(Level.FINE, "handleMouseEntered {0}:: {1}", new Object[]{itemData.getName(), event});
         if (itemData.hasChildrenData()) {
             rectangle.setFill(fillOverColor);
             rectangle.setStroke(strokeOverColor);
@@ -216,7 +214,7 @@ public class FxMapItem implements MapItem {
     }
 
     private void handleMouseExited(MouseEvent event) {
-        LOG.log(Level.FINE, "{0}:: {1}", new Object[]{itemData.getName(), event});
+        LOG.log(Level.FINE, "handleMouseExited {0}:: {1}", new Object[]{itemData.getName(), event});
         if (itemData.hasChildrenData()) {
             rectangle.setFill(fillColor);
             rectangle.setStroke(strokeColor);
@@ -225,7 +223,7 @@ public class FxMapItem implements MapItem {
     }
 
     private void handleMouseClicked(MouseEvent event) {
-        LOG.log(Level.FINE, "{0}:: {1}", new Object[]{itemData.getName(), event});
+        LOG.log(Level.FINE, "handleMouseClicked {0}:: {1}", new Object[]{itemData.getName(), event});
         if (itemData.hasChildrenData()) {
             propertyChangeSupport.firePropertyChange(TreeMapUtils.ITEM_CLICKED, null, itemData);
         }

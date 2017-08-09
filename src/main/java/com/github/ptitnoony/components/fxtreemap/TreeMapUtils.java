@@ -29,16 +29,38 @@ package com.github.ptitnoony.components.fxtreemap;
  */
 public class TreeMapUtils {
 
+    /**
+     * Default timer value for delayed layout update in a TreeMap.
+     */
     public static final int DEFAULT_TIMER_DELAY = 100;
+
+    /**
+     * Default width of a TreeMap component.
+     */
     public static final double DEFAULT_WIDTH = 1200;
+
+    /**
+     * Default height of a TreeMap component.
+     */
     public static final double DEFAULT_HEIGHT = 800;
 
+    /**
+     * Default value of a MapData is its value is not specified.
+     */
     public static final double DEFAULT_DATA_VALUE = 0.0;
 
+    /**
+     * Name of the property change event fired when a map item is clicked on.
+     */
     public static final String ITEM_CLICKED = "mapItemClicked";
 
     /**
-     * arbitrary randomly small number
+     * Name of the property change event fired when a MapData value is changed.
+     */
+    public static final String MAP_DATA_VALUE_CHANGED = "mapDataValueChanged";
+
+    /**
+     * Arbitrary randomly small number.
      */
     public static final double EPSILON = 0.00000001;
 
@@ -46,10 +68,13 @@ public class TreeMapUtils {
         // private utility constructor
     }
 
-    public static void quickSortDesc(MapItem[] inputArr, int lowerIndex, int higherIndex) {
+    public static boolean quickSortDesc(MapItem[] inputArr, int lowerIndex, int higherIndex) {
 
         int i = lowerIndex;
         int j = higherIndex;
+        if (inputArr == null || lowerIndex >= higherIndex || lowerIndex < 0 || higherIndex > inputArr.length - 1) {
+            return false;
+        }
         // calculate pivot number
         double pivot = inputArr[lowerIndex + (higherIndex - lowerIndex) / 2].getSize();
         // Divide into two arrays
@@ -82,5 +107,6 @@ public class TreeMapUtils {
         if (i < higherIndex) {
             quickSortDesc(inputArr, i, higherIndex);
         }
+        return true;
     }
 }
