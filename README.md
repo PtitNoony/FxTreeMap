@@ -79,9 +79,15 @@ The main examples are available in the `main` class. Here is an extract of the c
         AnchorPane.setTopAnchor(fxTreeMapNode, 4.0);
 ```
 
+## Control view (for illustration)
+
+The library provides a small example to illustrate the controls over the TreeMap component.
+
+![Alt text](/src/main/resources/readme/FxTreeMap_ControlView.png?raw=true "FxTreeMap ControlView example")
 
 ## Next steps
 
-- update UI when data model is changed
+- ~~update UI when data model is changed~~
 - use css styles
 - draw recursively in canvas example
+- draw names for each data item
