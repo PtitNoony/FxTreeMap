@@ -49,10 +49,10 @@ public class CanvasTreeMap extends TreeMap {
     private final CanvasMapModel model;
     private final TreeMapLayout treeMapLayout;
 
-    // are kept there for the moment, to be used is color function used ?
-    private Color fillColor = TreeMapStyle.DEFAULT_BACKGROUND_COLOR;
-    private Color strokeColor = TreeMapStyle.DEFAULT_STOKE_COLOR;
-
+    // TODO: use TreeMapStyle
+    private Color backgroundColor = TreeMapStyle.DEFAULT_BACKGROUND_COLOR;
+    private Color fillColor = TreeMapStyle.DEFAULT_DATA_FILL_COLOR;
+    private Color strokeColor = TreeMapStyle.DEFAULT_DATA_STOKE_COLOR;
     private double padding = 0;
     private double borderRadius = 0;
     private double strokeWidth = 1;
@@ -79,25 +79,61 @@ public class CanvasTreeMap extends TreeMap {
     }
 
     @Override
+    public Color getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    @Override
+    public Color getDataFill() {
+        return fillColor;
+    }
+
+    @Override
+    public Color getDataStroke() {
+        return strokeColor;
+    }
+
+    @Override
+    public double getDataBorderRadius() {
+        return borderRadius;
+    }
+
+    @Override
+    public double getDataStrokeWidth() {
+        return strokeWidth;
+    }
+
+    @Override
+    public double getPadding() {
+        return padding;
+    }
+
+    @Override
     public void setBackgroundColor(Color newBackgroundColor) {
-        fillColor = newBackgroundColor;
+        backgroundColor = newBackgroundColor;
         requestLayoutUpdate();
     }
 
     @Override
-    public void setStoke(Color newStrokeColor) {
+    public void setDataFill(Color dataFillColor) {
+        fillColor = dataFillColor;
+        requestLayoutUpdate();
+    }
+
+    @Override
+    public void setDataStroke(Color newStrokeColor) {
         strokeColor = newStrokeColor;
         requestLayoutUpdate();
     }
 
     @Override
-    public void setBorderRadius(double newBorderRadius) {
+    public void setDataBorderRadius(double newBorderRadius) {
         borderRadius = newBorderRadius;
         requestLayoutUpdate();
     }
 
     @Override
-    public void setStokeWidth(double newStrokeWidth) {
+    public void setDataStrokeWidth(double newStrokeWidth) {
         strokeWidth = newStrokeWidth;
         requestLayoutUpdate();
     }
@@ -127,7 +163,7 @@ public class CanvasTreeMap extends TreeMap {
 
     private void draw() {
         //TODO change
-        gContext.setFill(Color.BLACK);
+        gContext.setFill(backgroundColor);
         gContext.fillRect(0, 0, getWidth(), getHeight());
         gContext.beginPath();
         gContext.setStroke(strokeColor);

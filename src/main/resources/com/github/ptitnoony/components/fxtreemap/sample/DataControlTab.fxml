@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111" fx:controller="com.github.ptitnoony.components.fxtreemap.sample.DataControlTabController">
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.ptitnoony.components.fxtreemap.sample.DataControlTabController">
    <children>
       <VBox layoutX="314.0" layoutY="92.0" prefHeight="200.0" prefWidth="100.0" spacing="8.0" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="8.0">
          <children>
@@ -20,7 +26,45 @@
                   <TextField fx:id="valueField" editable="false" HBox.hgrow="NEVER" />
                </children>
             </HBox>
-            <TreeView fx:id="dataView" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+            <SplitPane dividerPositions="0.5063938618925832" VBox.vgrow="ALWAYS">
+               <items>
+                  <TreeView fx:id="dataView" prefHeight="200.0" prefWidth="200.0" />
+                  <GridPane hgap="8.0" vgap="8.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="239.0" minWidth="10.0" prefWidth="186.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="175.0" minWidth="10.0" prefWidth="172.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints />
+                      <RowConstraints minHeight="10.0" vgrow="NEVER" />
+                      <RowConstraints minHeight="10.0" vgrow="NEVER" />
+                        <RowConstraints minHeight="10.0" vgrow="NEVER" />
+                        <RowConstraints minHeight="10.0" vgrow="NEVER" />
+                        <RowConstraints minHeight="10.0" vgrow="NEVER" />
+                        <RowConstraints minHeight="10.0" vgrow="NEVER" />
+                        <RowConstraints minHeight="10.0" vgrow="NEVER" />
+                    </rowConstraints>
+                     <children>
+                        <CheckBox disable="true" mnemonicParsing="false" text="Show names" GridPane.rowIndex="1" />
+                        <ColorPicker fx:id="backgroundColorPicker" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" />
+                        <Label text="Background:" GridPane.rowIndex="2" />
+                        <Label text="Item Fill:" GridPane.rowIndex="3" />
+                        <Label text="Item Stroke:" GridPane.rowIndex="4" />
+                        <Label text="Item Stroke Width:" GridPane.rowIndex="5" />
+                        <Label text="Item Corner Radius:" GridPane.rowIndex="6" />
+                        <Label text="Padding between items:" GridPane.rowIndex="7" />
+                        <ColorPicker fx:id="itemFillColorPicker" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
+                        <ColorPicker fx:id="itemStrokePicker" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" />
+                        <Slider fx:id="itemStrokeSlider" blockIncrement="1.0" majorTickUnit="2.0" max="10.0" minorTickCount="1" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <Slider fx:id="itemCornerRadiusSlider" majorTickUnit="5.0" max="25.0" minorTickCount="2" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <Slider fx:id="paddingSlider" majorTickUnit="5.0" max="25.0" minorTickCount="2" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                     </children>
+                     <padding>
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                     </padding>
+                  </GridPane>
+               </items>
+            </SplitPane>
          </children>
       </VBox>
    </children>

@@ -26,6 +26,7 @@ package com.github.ptitnoony.components.fxtreemap.sample;
 import com.github.ptitnoony.components.fxtreemap.AggredatedData;
 import com.github.ptitnoony.components.fxtreemap.MapData;
 import com.github.ptitnoony.components.fxtreemap.SimpleMapData;
+import com.github.ptitnoony.components.fxtreemap.TreeMap;
 import com.github.ptitnoony.components.fxtreemap.canvasimpl.CanvasTreeMap;
 import com.github.ptitnoony.components.fxtreemap.fximpl.FxTreeMap;
 import java.io.IOException;
@@ -66,9 +67,9 @@ public final class SampleViewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         MapData data1 = createDataSet1();
         MapData data2 = createDataSet2();
-        createFxTreeMap(data1);
-        createCanvasTreeMap(data2);
-        createControlView(data1, data2);
+        TreeMap fxTreeMap = createFxTreeMap(data1);
+        TreeMap canvasTreeMap = createCanvasTreeMap(data2);
+        createControlView(fxTreeMap, canvasTreeMap);
     }
 
     private MapData createDataSet2() {
@@ -107,44 +108,50 @@ public final class SampleViewController implements Initializable {
         return new AggredatedData("data-set1", data1, data2, data3, data4, data5);
     }
 
-    private void createFxTreeMap(MapData data) {
+    private TreeMap createFxTreeMap(MapData data) {
         FxTreeMap fxTreeMap = new FxTreeMap(data);
         Node fxTreeMapNode = fxTreeMap.getNode();
         rectAnchorPane.getChildren().add(fxTreeMapNode);
-        AnchorPane.setBottomAnchor(fxTreeMapNode, 4.0);
-        AnchorPane.setLeftAnchor(fxTreeMapNode, 4.0);
-        AnchorPane.setRightAnchor(fxTreeMapNode, 4.0);
-        AnchorPane.setTopAnchor(fxTreeMapNode, 4.0);
+        AnchorPane.setBottomAnchor(fxTreeMapNode, 0.0);
+        AnchorPane.setLeftAnchor(fxTreeMapNode, 0.0);
+        AnchorPane.setRightAnchor(fxTreeMapNode, 0.0);
+        AnchorPane.setTopAnchor(fxTreeMapNode, 0.0);
         //
-        fxTreeMap.setBackgroundColor(Color.LIGHTGRAY);
-        fxTreeMap.setStoke(Color.WHITESMOKE);
-        fxTreeMap.setBorderRadius(10.0);
+        fxTreeMap.setDataFill(Color.LIGHTGRAY);
+        fxTreeMap.setDataStroke(Color.WHITESMOKE);
+        fxTreeMap.setDataBorderRadius(10.0);
         fxTreeMap.setPadding(5);
+        //
+        return fxTreeMap;
     }
 
-    private void createCanvasTreeMap(MapData data) {
+    private TreeMap createCanvasTreeMap(MapData data) {
         CanvasTreeMap canvasTreeMap = new CanvasTreeMap(data);
         Node canvasTreeMapNode = canvasTreeMap.getNode();
         canvasAnchorPane.getChildren().add(canvasTreeMapNode);
-        AnchorPane.setBottomAnchor(canvasTreeMapNode, 4.0);
-        AnchorPane.setLeftAnchor(canvasTreeMapNode, 4.0);
-        AnchorPane.setRightAnchor(canvasTreeMapNode, 4.0);
-        AnchorPane.setTopAnchor(canvasTreeMapNode, 4.0);
+        AnchorPane.setBottomAnchor(canvasTreeMapNode, 0.0);
+        AnchorPane.setLeftAnchor(canvasTreeMapNode, 0.0);
+        AnchorPane.setRightAnchor(canvasTreeMapNode, 0.0);
+        AnchorPane.setTopAnchor(canvasTreeMapNode, 0.0);
         //
-        canvasTreeMap.setBackgroundColor(Color.CORNFLOWERBLUE);
-        canvasTreeMap.setStoke(Color.DIMGREY);
-        canvasTreeMap.setBorderRadius(8.0);
-        canvasTreeMap.setPadding(3);
+        canvasTreeMap.setBackgroundColor(Color.DARKRED);
+        canvasTreeMap.setDataFill(Color.CORNFLOWERBLUE);
+        canvasTreeMap.setDataStroke(Color.WHITESMOKE);
+        canvasTreeMap.setDataStrokeWidth(2.5);
+        canvasTreeMap.setDataBorderRadius(8.0);
+        canvasTreeMap.setPadding(10);
+        //
+        return canvasTreeMap;
     }
 
-    private void createControlView(MapData data1, MapData data2) {
+    private void createControlView(TreeMap treeMap1, TreeMap treeMap2) {
         Stage stage = new Stage();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("DataControl.fxml"));
             Parent root = loader.load();
             DataControlController controller = loader.getController();
-            controller.addData(data1);
-            controller.addData(data2);
+            controller.addData(treeMap1);
+            controller.addData(treeMap2);
             Scene scene = new Scene(root);
             stage.setTitle("FxTreeMap Data control view");
             stage.setScene(scene);

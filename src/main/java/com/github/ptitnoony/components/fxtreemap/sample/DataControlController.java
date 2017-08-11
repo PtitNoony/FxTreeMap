@@ -23,7 +23,7 @@
  */
 package com.github.ptitnoony.components.fxtreemap.sample;
 
-import com.github.ptitnoony.components.fxtreemap.MapData;
+import com.github.ptitnoony.components.fxtreemap.TreeMap;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -54,23 +54,23 @@ public final class DataControlController implements Initializable {
     }
 
     /**
-     * Add a MapData to be controlled.
+     * Add a TreeMap to be controlled.
      *
-     * @param data the MapData to be added
+     * @param treeMap the TreeMap to be added
      */
-    protected void addData(MapData data) {
-        AnchorPane container = createTabContent(data);
-        Tab tab = new Tab(data.getName(), container);
+    protected void addData(TreeMap treeMap) {
+        AnchorPane container = createTabContent(treeMap);
+        Tab tab = new Tab(treeMap.getData().getName(), container);
         tab.setClosable(false);
         tabPane.getTabs().add(tab);
     }
 
-    private AnchorPane createTabContent(MapData data) {
+    private AnchorPane createTabContent(TreeMap treeMap) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("DataControlTab.fxml"));
             AnchorPane root = loader.load();
             DataControlTabController controller = loader.getController();
-            controller.setData(data);
+            controller.setData(treeMap);
             return root;
         } catch (IOException e) {
             LOG.log(Level.SEVERE, "Exception while loading control tab: {0}", e);

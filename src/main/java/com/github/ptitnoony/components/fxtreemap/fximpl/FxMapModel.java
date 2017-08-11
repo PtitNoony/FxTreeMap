@@ -51,6 +51,7 @@ public class FxMapModel implements MapModel {
         propertyChangeSupport = new PropertyChangeSupport(FxMapModel.this);
         propertyChangeSupport.addPropertyChangeListener(treeMap);
         style = new TreeMapStyle();
+        style.removePropertyChangeListener(FxMapModel.this);
         totalArea = width * height;
         modelData.getChildrenData().forEach(d -> {
             FxMapItem mapItem = new FxMapItem(FxMapModel.this, d);

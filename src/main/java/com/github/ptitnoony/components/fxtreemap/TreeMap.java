@@ -142,13 +142,27 @@ public abstract class TreeMap implements PropertyChangeListener {
 
     public abstract void setBackgroundColor(Color newBackgroundColor);
 
-    public abstract void setStoke(Color newStrokeColor);
+    public abstract void setDataFill(Color newBackgroundColor);
 
-    public abstract void setBorderRadius(double newBorderRadius);
+    public abstract void setDataStroke(Color newStrokeColor);
+
+    public abstract void setDataBorderRadius(double newBorderRadius);
+
+    public abstract void setDataStrokeWidth(double newStrokeWidth);
 
     public abstract void setPadding(double newPaddingValue);
 
-    public abstract void setStokeWidth(double newStrokeWidth);
+    public abstract Color getBackgroundColor();
+
+    public abstract Color getDataFill();
+
+    public abstract Color getDataStroke();
+
+    public abstract double getDataBorderRadius();
+
+    public abstract double getDataStrokeWidth();
+
+    public abstract double getPadding();
 
     protected abstract void applyLayout();
 

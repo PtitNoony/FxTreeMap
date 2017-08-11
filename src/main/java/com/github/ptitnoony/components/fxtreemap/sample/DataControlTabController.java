@@ -24,6 +24,7 @@
 package com.github.ptitnoony.components.fxtreemap.sample;
 
 import com.github.ptitnoony.components.fxtreemap.MapData;
+import com.github.ptitnoony.components.fxtreemap.TreeMap;
 import com.github.ptitnoony.components.fxtreemap.TreeMapUtils;
 import java.beans.PropertyChangeEvent;
 import java.net.URL;
@@ -33,6 +34,7 @@ import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Slider;
@@ -58,7 +60,21 @@ public final class DataControlTabController implements Initializable {
     private TextField valueField;
     @FXML
     private TreeView<MapData> dataView;
+    //
+    @FXML
+    private ColorPicker backgroundColorPicker;
+    @FXML
+    private ColorPicker itemFillColorPicker;
+    @FXML
+    private ColorPicker itemStrokePicker;
+    @FXML
+    private Slider itemStrokeSlider;
+    @FXML
+    private Slider itemCornerRadiusSlider;
+    @FXML
+    private Slider paddingSlider;
 
+    private TreeMap treeMap;
     private MapData model;
     private MapData selectedData = null;
 
@@ -82,19 +98,23 @@ public final class DataControlTabController implements Initializable {
                 selectedData.setValue(newValue.doubleValue());
             }
         });
+        initStyleListeners();
     }
 
     /**
-     * Set the MapData to be controlled.
+     * Set the TreeMap to be controlled.
      *
-     * @param data the MapData to be controlled
+     * @param treeMapComponent the TreeMape to be controlled
      */
-    protected void setData(MapData data) {
-        model = data;
+    protected void setData(TreeMap treeMapComponent) {
+        treeMap = treeMapComponent;
+        model = treeMap.getData();
         model.addPropertyChangeListener(this::handleModelChange);
-        TreeItem<MapData> root = new TreeItem<>(data);
-        createDataChildrenItems(data, root);
+        TreeItem<MapData> root = new TreeItem<>(model);
+        createDataChildrenItems(model, root);
         dataView.setRoot(root);
+        //
+        updateUI();
     }
 
     private void updateControls() {
@@ -130,6 +150,42 @@ public final class DataControlTabController implements Initializable {
         if (TreeMapUtils.MAP_DATA_VALUE_CHANGED.equals(event.getPropertyName()) && selectedData != null) {
             valueField.setText(Double.toString(selectedData.getValue()));
         }
+    }
+
+    private void initStyleListeners() {
+        backgroundColorPicker.setOnAction(event -> {
+            LOG.log(Level.FINE, "User changed background color: {0}", event);
+            treeMap.setBackgroundColor(backgroundColorPicker.getValue());
+        });
+        itemFillColorPicker.setOnAction(event -> {
+            LOG.log(Level.FINE, "User changed data fill color: {0}", event);
+            treeMap.setDataFill(itemFillColorPicker.getValue());
+        });
+        itemStrokePicker.setOnAction(event -> {
+            LOG.log(Level.FINE, "User changed data stroke color: {0}", event);
+            treeMap.setDataStroke(itemStrokePicker.getValue());
+        });
+        itemStrokeSlider.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            LOG.log(Level.FINE, "New item stroke value: {0} {1} {2}", new Object[]{observable, oldValue, newValue});
+            treeMap.setDataStrokeWidth(itemStrokeSlider.getValue());
+        });
+        itemCornerRadiusSlider.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            LOG.log(Level.FINE, "New item corner radius value: {0} {1} {2}", new Object[]{observable, oldValue, newValue});
+            treeMap.setDataBorderRadius(itemCornerRadiusSlider.getValue());
+        });
+        paddingSlider.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            LOG.log(Level.FINE, "New padding value: {0} {1} {2}", new Object[]{observable, oldValue, newValue});
+            treeMap.setPadding(paddingSlider.getValue());
+        });
+    }
+
+    private void updateUI() {
+        backgroundColorPicker.setValue(treeMap.getBackgroundColor());
+        itemFillColorPicker.setValue(treeMap.getDataFill());
+        itemStrokePicker.setValue(treeMap.getDataStroke());
+        itemStrokeSlider.setValue(treeMap.getDataStrokeWidth());
+        itemCornerRadiusSlider.setValue(treeMap.getDataBorderRadius());
+        paddingSlider.setValue(treeMap.getPadding());
     }
 
     private static class TextFieldTreeCellImpl extends TreeCell<MapData> {

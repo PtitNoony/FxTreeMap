@@ -33,8 +33,10 @@ import javafx.scene.paint.Color;
  */
 public class TreeMapStyle {
 
-    public static final Color DEFAULT_BACKGROUND_COLOR = Color.DARKGRAY;
-    public static final Color DEFAULT_STOKE_COLOR = Color.LIGHTGRAY;
+    public static final Color DEFAULT_BACKGROUND_COLOR = Color.BLACK;
+
+    public static final Color DEFAULT_DATA_FILL_COLOR = Color.DARKGRAY;
+    public static final Color DEFAULT_DATA_STOKE_COLOR = Color.LIGHTGRAY;
 
     public static final Color OVER_BACKGROUND_COLOR = Color.GRAY;
     public static final Color OVER_STOKE_COLOR = Color.CORNFLOWERBLUE;
@@ -50,6 +52,7 @@ public class TreeMapStyle {
     private double padding;
     private double borderRadius;
     private double strokeWidth;
+    private Color backgroundColor;
     private Color fillColor;
     private Color strokeColor;
     private Color overFillColor;
@@ -61,8 +64,9 @@ public class TreeMapStyle {
         padding = DEFAULT_PADDING;
         borderRadius = DEFAULT_BORDER_RADIUS;
         strokeWidth = DEFAULT_STROKE_WIDTH;
-        fillColor = DEFAULT_BACKGROUND_COLOR;
-        strokeColor = DEFAULT_STOKE_COLOR;
+        backgroundColor = DEFAULT_BACKGROUND_COLOR;
+        fillColor = DEFAULT_DATA_FILL_COLOR;
+        strokeColor = DEFAULT_DATA_STOKE_COLOR;
         overFillColor = OVER_BACKGROUND_COLOR;
         overStrokeColor = OVER_STOKE_COLOR;
     }
@@ -77,6 +81,10 @@ public class TreeMapStyle {
 
     public double getStrokeWidth() {
         return strokeWidth;
+    }
+
+    public Color getBackgroundColor() {
+        return backgroundColor;
     }
 
     public Color getFillColor() {
@@ -95,6 +103,11 @@ public class TreeMapStyle {
         return overStrokeColor;
     }
 
+    public void setBackgroundColor(Color backgroundColor) {
+        this.backgroundColor = backgroundColor;
+        firePropertyChanged();
+    }
+
     public void setPadding(double padding) {
         this.padding = padding;
         firePropertyChanged();
@@ -107,7 +120,7 @@ public class TreeMapStyle {
 
     public void setStokeWidth(double newStrokeWidth) {
         this.strokeWidth = newStrokeWidth;
-//        firePropertyChanged();
+        firePropertyChanged();
     }
 
     public void setFillColor(Color fillColor) {

@@ -37,8 +37,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import static javafx.application.Platform.runLater;
+import javafx.geometry.Insets;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -79,8 +83,10 @@ public class FxTreeMap extends TreeMap {
         mapLevels.put(model.getData(), model);
         currentModel = model;
         model.setTreeMapStyle(style);
+        style.addPropertyChangeListener(this::handleStyleChanged);
         //
         layout = new VBox(8);
+        layout.setPadding(new Insets(8));
         //
         breadCrumbBar = new BreadCrumbBar();
         pane = new Pane();
@@ -117,22 +123,57 @@ public class FxTreeMap extends TreeMap {
     }
 
     @Override
+    public Color getBackgroundColor() {
+        return style.getBackgroundColor();
+    }
+
+    @Override
+    public Color getDataFill() {
+        return style.getFillColor();
+    }
+
+    @Override
+    public Color getDataStroke() {
+        return style.getStrokeColor();
+    }
+
+    @Override
+    public double getDataBorderRadius() {
+        return style.getBorderRadius();
+    }
+
+    @Override
+    public double getDataStrokeWidth() {
+        return style.getStrokeWidth();
+    }
+
+    @Override
+    public double getPadding() {
+        return style.getPadding();
+    }
+
+    @Override
     public void setBackgroundColor(Color newBackgroundColor) {
+        style.setBackgroundColor(newBackgroundColor);
+    }
+
+    @Override
+    public void setDataFill(Color newBackgroundColor) {
         style.setFillColor(newBackgroundColor);
     }
 
     @Override
-    public void setStoke(Color newStrokeColor) {
+    public void setDataStroke(Color newStrokeColor) {
         style.setStrokeColor(newStrokeColor);
     }
 
     @Override
-    public void setStokeWidth(double newStrokeWidth) {
+    public void setDataStrokeWidth(double newStrokeWidth) {
         style.setStokeWidth(newStrokeWidth);
     }
 
     @Override
-    public void setBorderRadius(double newBorderRadius) {
+    public void setDataBorderRadius(double newBorderRadius) {
         style.setBorderRadius(newBorderRadius);
     }
 
@@ -219,5 +260,10 @@ public class FxTreeMap extends TreeMap {
         if (TreeMapUtils.MAP_DATA_VALUE_CHANGED.equals(event.getPropertyName())) {
             requestLayoutUpdate();
         }
+    }
+
+    private void handleStyleChanged(PropertyChangeEvent event) {
+        LOG.log(Level.FINE, "Updating after style changed: {0}", event);
+        getContainer().setBackground(new Background(new BackgroundFill(style.getBackgroundColor(), CornerRadii.EMPTY, Insets.EMPTY)));
     }
 }
