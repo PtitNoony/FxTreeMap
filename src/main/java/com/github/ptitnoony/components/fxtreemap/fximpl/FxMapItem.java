@@ -31,12 +31,18 @@ import com.github.ptitnoony.components.fxtreemap.TreeMapUtils;
 import java.beans.PropertyChangeSupport;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 
 /**
  *
@@ -46,12 +52,20 @@ public class FxMapItem implements MapItem {
 
     private static final Logger LOG = Logger.getGlobal();
 
+    private static final double TEXT_PADDING = 8;
+    private static final double DEFAULT_TEXT_WIDTH = 50;
+    private static final double DEFAULT_TEXT_HEIGHT = 20;
+    private static final double DEFAULT_TOOLTIP_FONT_SIZE = 20;
+
     private final PropertyChangeSupport propertyChangeSupport;
 
     private final FxMapModel mapModel;
     private final MapData itemData;
     private final Rect rect;
+    private final Group mainNode;
     private final Rectangle rectangle;
+    private final Label label;
+    private final Tooltip tooltip;
     private double padding = 0;
 
     private Color fillColor;
@@ -65,6 +79,11 @@ public class FxMapItem implements MapItem {
         itemData = data;
         rect = new Rect();
         rectangle = new Rectangle();
+        label = new Label(itemData.getName());
+        tooltip = new Tooltip(itemData.getName());
+        tooltip.setFont(new Font(DEFAULT_TOOLTIP_FONT_SIZE));
+        mainNode = new Group(rectangle, label);
+        Tooltip.install(label, tooltip);
         applyStyle(model.getStyle());
         if (data.hasChildrenData()) {
             rectangle.setEffect(new Glow());
@@ -121,6 +140,7 @@ public class FxMapItem implements MapItem {
         setPadding(style.getPadding());
         setBorderRadius(style.getBorderRadius());
         setStrokeWidth(style.getStrokeWidth());
+        setFontColor(style.getFontColor());
     }
 
     /**
@@ -193,11 +213,20 @@ public class FxMapItem implements MapItem {
     }
 
     /**
+     * Set font color for the item.
+     *
+     * @param fontColor the font color
+     */
+    public void setFontColor(Color fontColor) {
+        label.setTextFill(fontColor);
+    }
+
+    /**
      *
      * @return the map item node to be added to the scene
      */
     protected Node getNode() {
-        return rectangle;
+        return mainNode;
     }
 
     /**
@@ -208,30 +237,53 @@ public class FxMapItem implements MapItem {
         rectangle.setY(rect.getY() + padding);
         rectangle.setWidth(rect.getWidth() - 2.0 * padding);
         rectangle.setHeight(rect.getHeight() - 2.0 * padding);
+        //
+        label.setRotate(0);
+        Bounds textBounds = label.getLayoutBounds();
+        boolean verticalText;
+        double textHeight;
+        double textWidth;
+        if (textBounds != null) {
+            textHeight = textBounds.getHeight();
+            textWidth = textBounds.getWidth();
+        } else {
+            textHeight = DEFAULT_TEXT_HEIGHT;
+            textWidth = DEFAULT_TEXT_WIDTH;
+        }
+        verticalText = textBounds != null ? textBounds.getWidth() > rectangle.getWidth() - 2 * TEXT_PADDING : false;
+        //
+        if (!verticalText) {
+            label.setTranslateX(rectangle.getX() + TEXT_PADDING);
+            label.setTranslateY(rectangle.getY() + TEXT_PADDING);
+            label.setRotate(0);
+            label.setTextAlignment(TextAlignment.LEFT);
+            label.setMaxWidth(rectangle.getWidth() - 2 * TEXT_PADDING);
+        } else {
+            label.setTranslateX(rectangle.getX() + TEXT_PADDING - textHeight);
+            label.setTranslateY(rectangle.getY() + rectangle.getHeight() - textWidth);
+            label.setRotate(-90);
+            label.setTextAlignment(TextAlignment.LEFT);
+            label.setMaxWidth(rectangle.getHeight() - 2 * TEXT_PADDING);
+        }
     }
 
     private void initInteractivity() {
         rectangle.setOnMouseEntered(this::handleMouseEntered);
         rectangle.setOnMouseExited(this::handleMouseExited);
         rectangle.setOnMouseClicked(this::handleMouseClicked);
+        //
+        label.setOnMouseEntered(this::handleLabelEntered);
+        label.setOnMouseExited(this::handleLabelExited);
     }
 
     private void handleMouseEntered(MouseEvent event) {
         LOG.log(Level.FINE, "handleMouseEntered {0}:: {1}", new Object[]{itemData.getName(), event});
-        if (itemData.hasChildrenData()) {
-            rectangle.setFill(fillOverColor);
-            rectangle.setStroke(strokeOverColor);
-            rectangle.getScene().setCursor(Cursor.HAND);
-        }
+        displayOver();
     }
 
     private void handleMouseExited(MouseEvent event) {
         LOG.log(Level.FINE, "handleMouseExited {0}:: {1}", new Object[]{itemData.getName(), event});
-        if (itemData.hasChildrenData()) {
-            rectangle.setFill(fillColor);
-            rectangle.setStroke(strokeColor);
-            rectangle.getScene().setCursor(Cursor.DEFAULT);
-        }
+        displayIdle();
     }
 
     private void handleMouseClicked(MouseEvent event) {
@@ -241,4 +293,32 @@ public class FxMapItem implements MapItem {
         }
     }
 
+    private void handleLabelEntered(MouseEvent event) {
+        LOG.log(Level.FINE, "handleLabelEntered {0}:: {1}", new Object[]{itemData.getName(), event});
+        displayOver();
+        label.getScene().setCursor(Cursor.OPEN_HAND);
+        tooltip.show(label.getScene().getWindow());
+    }
+
+    private void handleLabelExited(MouseEvent event) {
+        LOG.log(Level.FINE, "handleLabelExited {0}:: {1}", new Object[]{itemData.getName(), event});
+        label.getScene().setCursor(Cursor.DEFAULT);
+        tooltip.hide();
+    }
+
+    private void displayIdle() {
+        if (itemData.hasChildrenData()) {
+            rectangle.setFill(fillColor);
+            rectangle.setStroke(strokeColor);
+            rectangle.getScene().setCursor(Cursor.DEFAULT);
+        }
+    }
+
+    private void displayOver() {
+        if (itemData.hasChildrenData()) {
+            rectangle.setFill(fillOverColor);
+            rectangle.setStroke(strokeOverColor);
+            rectangle.getScene().setCursor(Cursor.HAND);
+        }
+    }
 }

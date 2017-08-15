@@ -41,6 +41,8 @@ public class TreeMapStyle {
     public static final Color OVER_BACKGROUND_COLOR = Color.GRAY;
     public static final Color OVER_STOKE_COLOR = Color.CORNFLOWERBLUE;
 
+    public static final Color DEFAULT_FONT_COLOR = Color.BLACK;
+
     public static final double DEFAULT_PADDING = 0;
     public static final double DEFAULT_BORDER_RADIUS = 8;
     public static final double DEFAULT_STROKE_WIDTH = 1.5;
@@ -57,6 +59,7 @@ public class TreeMapStyle {
     private Color strokeColor;
     private Color overFillColor;
     private Color overStrokeColor;
+    private Color fontColor;
 
     public TreeMapStyle() {
         propertyChangeSupport = new PropertyChangeSupport(TreeMapStyle.this);
@@ -69,6 +72,7 @@ public class TreeMapStyle {
         strokeColor = DEFAULT_DATA_STOKE_COLOR;
         overFillColor = OVER_BACKGROUND_COLOR;
         overStrokeColor = OVER_STOKE_COLOR;
+        fontColor = DEFAULT_FONT_COLOR;
     }
 
     public double getPadding() {
@@ -101,6 +105,10 @@ public class TreeMapStyle {
 
     public Color getOverStrokeColor() {
         return overStrokeColor;
+    }
+
+    public Color getFontColor() {
+        return fontColor;
     }
 
     public void setBackgroundColor(Color backgroundColor) {
@@ -140,6 +148,11 @@ public class TreeMapStyle {
 
     public void setOverStrokeColor(Color overStrokeColor) {
         this.overStrokeColor = overStrokeColor;
+        firePropertyChanged();
+    }
+
+    public void setFontColor(Color fontColor) {
+        this.fontColor = fontColor;
         firePropertyChanged();
     }
 

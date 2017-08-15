@@ -101,7 +101,7 @@ public class TreeMapLayout {
     }
 
     public Rect layoutRow(MapItem[] items, int start, int end, Rect bounds) {
-        boolean isHorizontal = bounds.getWidth() > bounds.getWidth();
+        boolean isHorizontal = bounds.getWidth() > bounds.getHeight();
         double total = bounds.getWidth() * bounds.getHeight();
         double rowSize = totalSize(items, start, end);
         double rowRatio = rowSize / total;
