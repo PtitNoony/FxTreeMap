@@ -29,6 +29,7 @@ import com.github.ptitnoony.components.fxtreemap.SimpleMapData;
 import com.github.ptitnoony.components.fxtreemap.TreeMap;
 import com.github.ptitnoony.components.fxtreemap.canvasimpl.CanvasTreeMap;
 import com.github.ptitnoony.components.fxtreemap.fximpl.FxTreeMap;
+import com.github.ptitnoony.components.fxtreemap.sample.countries.CountryDataFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -40,6 +41,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -59,17 +62,17 @@ public final class SampleViewController implements Initializable {
     private static final double DELTA_SCREEN_POSITION = 150;
 
     @FXML
-    private AnchorPane rectAnchorPane;
-    @FXML
-    private AnchorPane canvasAnchorPane;
+    private TabPane tabPane;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         MapData data1 = createDataSet1();
         MapData data2 = createDataSet2();
+        MapData euData = createEU();
         TreeMap fxTreeMap = createFxTreeMap(data1);
         TreeMap canvasTreeMap = createCanvasTreeMap(data2);
-        createControlView(fxTreeMap, canvasTreeMap);
+        TreeMap euTreeMap = createCustomizableTreeMap(euData);
+        createControlView(fxTreeMap, canvasTreeMap, euTreeMap);
     }
 
     private MapData createDataSet2() {
@@ -108,15 +111,12 @@ public final class SampleViewController implements Initializable {
         return new AggredatedData("data-set1", data1, data2, data3, data4, data5);
     }
 
+    private MapData createEU() {
+        return CountryDataFactory.createEUData();
+    }
+
     private TreeMap createFxTreeMap(MapData data) {
         FxTreeMap fxTreeMap = new FxTreeMap(data);
-        Node fxTreeMapNode = fxTreeMap.getNode();
-        rectAnchorPane.getChildren().add(fxTreeMapNode);
-        AnchorPane.setBottomAnchor(fxTreeMapNode, 0.0);
-        AnchorPane.setLeftAnchor(fxTreeMapNode, 0.0);
-        AnchorPane.setRightAnchor(fxTreeMapNode, 0.0);
-        AnchorPane.setTopAnchor(fxTreeMapNode, 0.0);
-        //
         fxTreeMap.setDataFill(Color.LIGHTGRAY);
         fxTreeMap.setDataStroke(Color.WHITESMOKE);
         fxTreeMap.setDataBorderRadius(10.0);
@@ -127,13 +127,6 @@ public final class SampleViewController implements Initializable {
 
     private TreeMap createCanvasTreeMap(MapData data) {
         CanvasTreeMap canvasTreeMap = new CanvasTreeMap(data);
-        Node canvasTreeMapNode = canvasTreeMap.getNode();
-        canvasAnchorPane.getChildren().add(canvasTreeMapNode);
-        AnchorPane.setBottomAnchor(canvasTreeMapNode, 0.0);
-        AnchorPane.setLeftAnchor(canvasTreeMapNode, 0.0);
-        AnchorPane.setRightAnchor(canvasTreeMapNode, 0.0);
-        AnchorPane.setTopAnchor(canvasTreeMapNode, 0.0);
-        //
         canvasTreeMap.setBackgroundColor(Color.DARKRED);
         canvasTreeMap.setDataFill(Color.CORNFLOWERBLUE);
         canvasTreeMap.setDataStroke(Color.WHITESMOKE);
@@ -144,14 +137,26 @@ public final class SampleViewController implements Initializable {
         return canvasTreeMap;
     }
 
-    private void createControlView(TreeMap treeMap1, TreeMap treeMap2) {
+    private TreeMap createCustomizableTreeMap(MapData data) {
+        FxTreeMap fxTreeMap = new FxTreeMap(data);
+        fxTreeMap.setDataFill(Color.LIGHTGRAY);
+        fxTreeMap.setDataStroke(Color.WHITESMOKE);
+        fxTreeMap.setDataBorderRadius(10.0);
+        fxTreeMap.setPadding(5);
+        //
+        return fxTreeMap;
+    }
+
+    private void createControlView(TreeMap... treeMaps) {
         Stage stage = new Stage();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("DataControl.fxml"));
             Parent root = loader.load();
             DataControlController controller = loader.getController();
-            controller.addData(treeMap1);
-            controller.addData(treeMap2);
+            for (TreeMap t : treeMaps) {
+                addTab(t);
+                controller.addData(t);
+            }
             Scene scene = new Scene(root);
             stage.setTitle("FxTreeMap Data control view");
             stage.setScene(scene);
@@ -161,5 +166,18 @@ public final class SampleViewController implements Initializable {
         stage.show();
         stage.setX(stage.getX() + DELTA_SCREEN_POSITION);
         stage.setY(stage.getY() + DELTA_SCREEN_POSITION);
+    }
+
+    private void addTab(TreeMap treeMap) {
+        AnchorPane treeMapContainer = new AnchorPane();
+        treeMapContainer.setPrefSize(0, 0);
+        Tab tab = new Tab(treeMap.getData().getName(), treeMapContainer);
+        Node treeMapNode = treeMap.getNode();
+        treeMapContainer.getChildren().add(treeMapNode);
+        AnchorPane.setBottomAnchor(treeMapNode, 0.0);
+        AnchorPane.setLeftAnchor(treeMapNode, 0.0);
+        AnchorPane.setRightAnchor(treeMapNode, 0.0);
+        AnchorPane.setTopAnchor(treeMapNode, 0.0);
+        tabPane.getTabs().add(tab);
     }
 }

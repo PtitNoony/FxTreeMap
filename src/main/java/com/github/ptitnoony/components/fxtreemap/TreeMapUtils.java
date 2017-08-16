@@ -23,11 +23,17 @@
  */
 package com.github.ptitnoony.components.fxtreemap;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import sun.rmi.runtime.Log;
+
 /**
  *
  * @author ahamon
  */
 public class TreeMapUtils {
+
+    private static final Logger LOG = Logger.getGlobal();
 
     /**
      * Default timer value for delayed layout update in a TreeMap.
@@ -58,11 +64,24 @@ public class TreeMapUtils {
      * Name of the property change event fired when a MapData value is changed.
      */
     public static final String MAP_DATA_VALUE_CHANGED = "mapDataValueChanged";
+    /**
+     * Name of the property change event fired when a data value function is changed.
+     */
+    public static final String MAP_DATA_VALUE_FUNCTION_CHANGED = "mapDataValueFunctionChanged";
 
     /**
      * Arbitrary randomly small number.
      */
     public static final double EPSILON = 0.00000001;
+
+    public static final DataNameFunction DEFAULT_DATA_NAME_FUNCTION = o -> {
+        LOG.log(Level.INFO, "Invoking default name function on {0}", o);
+        return "?";
+    };
+    public static final DataValueFunction DEFAULT_DATA_VALUE_FUNCTION = o -> {
+        LOG.log(Level.INFO, "Invoking default value function on {0}", o);
+        return 0;
+    };
 
     private TreeMapUtils() {
         // private utility constructor

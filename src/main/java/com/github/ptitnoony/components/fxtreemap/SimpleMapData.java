@@ -126,4 +126,8 @@ public class SimpleMapData implements MapData {
         propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
+    protected PropertyChangeSupport getPropertyChangeSupport() {
+        return propertyChangeSupport;
+    }
+
 }
