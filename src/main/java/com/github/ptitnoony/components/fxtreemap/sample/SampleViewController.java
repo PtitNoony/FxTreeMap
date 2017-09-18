@@ -24,11 +24,13 @@
 package com.github.ptitnoony.components.fxtreemap.sample;
 
 import com.github.ptitnoony.components.fxtreemap.AggredatedData;
+import com.github.ptitnoony.components.fxtreemap.CustomizableMapData;
 import com.github.ptitnoony.components.fxtreemap.MapData;
 import com.github.ptitnoony.components.fxtreemap.SimpleMapData;
 import com.github.ptitnoony.components.fxtreemap.TreeMap;
 import com.github.ptitnoony.components.fxtreemap.canvasimpl.CanvasTreeMap;
 import com.github.ptitnoony.components.fxtreemap.fximpl.FxTreeMap;
+import com.github.ptitnoony.components.fxtreemap.sample.countries.Country;
 import com.github.ptitnoony.components.fxtreemap.sample.countries.CountryDataFactory;
 import java.io.IOException;
 import java.net.URL;
@@ -143,6 +145,9 @@ public final class SampleViewController implements Initializable {
         fxTreeMap.setDataStroke(Color.WHITESMOKE);
         fxTreeMap.setDataBorderRadius(10.0);
         fxTreeMap.setPadding(5);
+        //
+        CustomizableMapData<Country> customRootData = (CustomizableMapData<Country>) data.getLookup().lookup(CustomizableMapData.class);
+        customRootData.setValueFunction(o->o.getPopulation());
         //
         return fxTreeMap;
     }

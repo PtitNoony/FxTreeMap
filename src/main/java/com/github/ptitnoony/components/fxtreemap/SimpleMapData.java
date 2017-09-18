@@ -29,6 +29,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
 
 /**
  *
@@ -39,6 +41,8 @@ public class SimpleMapData implements MapData {
     private static final Logger LOG = Logger.getGlobal();
 
     private final PropertyChangeSupport propertyChangeSupport;
+    private final InstanceContent lookupContents = new InstanceContent();
+    private final AbstractLookup lookup = new AbstractLookup(lookupContents);
     private String name;
     private double value;
 
@@ -67,6 +71,15 @@ public class SimpleMapData implements MapData {
      */
     public SimpleMapData(double dataValue) {
         this("", dataValue);
+    }
+
+    protected void addToLookup(Object o) {
+        lookupContents.add(o);
+    }
+
+    @Override
+    public AbstractLookup getLookup() {
+        return lookup;
     }
 
     @Override

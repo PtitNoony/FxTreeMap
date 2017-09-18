@@ -25,7 +25,6 @@ package com.github.ptitnoony.components.fxtreemap;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sun.rmi.runtime.Log;
 
 /**
  *

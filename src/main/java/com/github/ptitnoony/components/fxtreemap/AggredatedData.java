@@ -32,6 +32,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
 
 /**
  *
@@ -42,6 +44,8 @@ public class AggredatedData implements MapData {
     private static final Logger LOG = Logger.getGlobal();
 
     private final PropertyChangeSupport propertyChangeSupport;
+    private final InstanceContent lookupContents = new InstanceContent();
+    private final AbstractLookup lookup = new AbstractLookup(lookupContents);
     private final List<MapData> datas;
     private String name;
     private double value;
@@ -90,6 +94,15 @@ public class AggredatedData implements MapData {
      */
     public AggredatedData() {
         this("");
+    }
+
+    protected final void addToLookup(Object o) {
+        lookupContents.add(o);
+    }
+
+    @Override
+    public AbstractLookup getLookup() {
+        return lookup;
     }
 
     @Override

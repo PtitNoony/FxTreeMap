@@ -25,6 +25,7 @@ package com.github.ptitnoony.components.fxtreemap;
 
 import java.beans.PropertyChangeListener;
 import java.util.List;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -104,5 +105,13 @@ public interface MapData {
      * @param listener the listener to be removed
      */
     void removePropertyChangeListener(PropertyChangeListener listener);
+
+    /**
+     * To access additional features for any MapData without having to inherit
+     * from other classes.
+     *
+     * @return the MapData lookup
+     */
+    Lookup getLookup();
 
 }

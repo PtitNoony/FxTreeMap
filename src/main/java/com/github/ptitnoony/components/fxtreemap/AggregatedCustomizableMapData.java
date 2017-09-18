@@ -38,6 +38,7 @@ public class AggregatedCustomizableMapData<T> extends AggredatedData implements 
     public AggregatedCustomizableMapData(String name, DataValueFunction<T> valueFunction) {
         super(name);
         this.valueFunction = valueFunction;
+        addToLookup(AggregatedCustomizableMapData.this);
     }
 
     public AggregatedCustomizableMapData(String name) {
