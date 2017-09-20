@@ -26,9 +26,14 @@ package com.github.ptitnoony.components.fxtreemap;
 /**
  *
  * @author ahamon
- * @param <T>
+ * @param <T> the Class of the object the function works on.
  */
 public interface DataValueFunction<T> {
 
+    /**
+     *
+     * @param object the object to be evaluated
+     * @return the object calculated value
+     */
     double getValue(T object);
 }

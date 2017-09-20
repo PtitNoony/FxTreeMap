@@ -23,20 +23,22 @@
  */
 package com.github.ptitnoony.components.fxtreemap.sample;
 
-import com.github.ptitnoony.components.fxtreemap.AggredatedData;
-import com.github.ptitnoony.components.fxtreemap.CustomizableMapData;
+import com.github.ptitnoony.components.fxtreemap.ConcreteMapData;
 import com.github.ptitnoony.components.fxtreemap.MapData;
-import com.github.ptitnoony.components.fxtreemap.SimpleMapData;
+import com.github.ptitnoony.components.fxtreemap.MapDataAdapter;
 import com.github.ptitnoony.components.fxtreemap.TreeMap;
 import com.github.ptitnoony.components.fxtreemap.canvasimpl.CanvasTreeMap;
 import com.github.ptitnoony.components.fxtreemap.fximpl.FxTreeMap;
 import com.github.ptitnoony.components.fxtreemap.sample.countries.Country;
 import com.github.ptitnoony.components.fxtreemap.sample.countries.CountryDataFactory;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static javafx.application.Platform.runLater;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -48,6 +50,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javax.swing.Timer;
 
 /**
  *
@@ -70,7 +73,7 @@ public final class SampleViewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         MapData data1 = createDataSet1();
         MapData data2 = createDataSet2();
-        MapData euData = createEU();
+        MapDataAdapter<Country> euData = CountryDataFactory.createEUData();
         TreeMap fxTreeMap = createFxTreeMap(data1);
         TreeMap canvasTreeMap = createCanvasTreeMap(data2);
         TreeMap euTreeMap = createCustomizableTreeMap(euData);
@@ -78,43 +81,39 @@ public final class SampleViewController implements Initializable {
     }
 
     private MapData createDataSet2() {
-        SimpleMapData data1 = new SimpleMapData("data1", 6.0);
-        SimpleMapData data2 = new SimpleMapData("data2", 6.0);
-        SimpleMapData data3 = new SimpleMapData("data3", 4.0);
-        SimpleMapData data4 = new SimpleMapData("data4", 3.0);
-        SimpleMapData data5 = new SimpleMapData("data5", 2.0);
-        SimpleMapData data6 = new SimpleMapData("data6", 2.0);
-        SimpleMapData data7 = new SimpleMapData("data7", 1.0);
+        ConcreteMapData data1 = new ConcreteMapData("data1", 6.0);
+        ConcreteMapData data2 = new ConcreteMapData("data2", 6.0);
+        ConcreteMapData data3 = new ConcreteMapData("data3", 4.0);
+        ConcreteMapData data4 = new ConcreteMapData("data4", 3.0);
+        ConcreteMapData data5 = new ConcreteMapData("data5", 2.0);
+        ConcreteMapData data6 = new ConcreteMapData("data6", 2.0);
+        ConcreteMapData data7 = new ConcreteMapData("data7", 1.0);
         //
-        return new AggredatedData("data-set2", data1, data2, data3, data4, data5, data6, data7);
+        return new ConcreteMapData("data-set2", data1, data2, data3, data4, data5, data6, data7);
     }
 
     private MapData createDataSet1() {
-        AggredatedData data1 = new AggredatedData("data1");
-        AggredatedData data1_1 = new AggredatedData("data1_1");
-        SimpleMapData data1_1_1 = new SimpleMapData("data1_1_1", 0.5);
-        SimpleMapData data1_1_2 = new SimpleMapData("data1_1_2", 1.0);
-        SimpleMapData data1_1_3 = new SimpleMapData("data1_1_3", 2.0);
+        ConcreteMapData data1 = new ConcreteMapData("data1", MapData.DataType.NODE);
+        ConcreteMapData data1_1 = new ConcreteMapData("data1_1");
+        ConcreteMapData data1_1_1 = new ConcreteMapData("data1_1_1", 0.5);
+        ConcreteMapData data1_1_2 = new ConcreteMapData("data1_1_2", 1.0);
+        ConcreteMapData data1_1_3 = new ConcreteMapData("data1_1_3", 2.0);
         data1_1.addChildrenData(data1_1_1);
         data1_1.addChildrenData(data1_1_2);
         data1_1.addChildrenData(data1_1_3);
-        SimpleMapData data1_2 = new SimpleMapData("data1_2", 6.0);
-        SimpleMapData data1_3 = new SimpleMapData("data1_3", 3.0);
-        SimpleMapData data1_4 = new SimpleMapData("data1_4", 1.0);
+        ConcreteMapData data1_2 = new ConcreteMapData("data1_2", 6.0);
+        ConcreteMapData data1_3 = new ConcreteMapData("data1_3", 3.0);
+        ConcreteMapData data1_4 = new ConcreteMapData("data1_4", 1.0);
         data1.addChildrenData(data1_1);
         data1.addChildrenData(data1_2);
         data1.addChildrenData(data1_3);
         data1.addChildrenData(data1_4);
-        SimpleMapData data2 = new SimpleMapData("data2", 3.0);
-        SimpleMapData data3 = new SimpleMapData("data3", 2.0);
-        SimpleMapData data4 = new SimpleMapData("data4", 2.0);
-        SimpleMapData data5 = new SimpleMapData("data5", 1.0);
+        ConcreteMapData data2 = new ConcreteMapData("data2", 3.0);
+        ConcreteMapData data3 = new ConcreteMapData("data3", 2.0);
+        ConcreteMapData data4 = new ConcreteMapData("data4", 2.0);
+        ConcreteMapData data5 = new ConcreteMapData("data5", 1.0);
         //
-        return new AggredatedData("data-set1", data1, data2, data3, data4, data5);
-    }
-
-    private MapData createEU() {
-        return CountryDataFactory.createEUData();
+        return new ConcreteMapData("data-set1", data1, data2, data3, data4, data5);
     }
 
     private TreeMap createFxTreeMap(MapData data) {
@@ -139,15 +138,27 @@ public final class SampleViewController implements Initializable {
         return canvasTreeMap;
     }
 
-    private TreeMap createCustomizableTreeMap(MapData data) {
+    private TreeMap createCustomizableTreeMap(MapDataAdapter<Country> data) {
         FxTreeMap fxTreeMap = new FxTreeMap(data);
         fxTreeMap.setDataFill(Color.LIGHTGRAY);
         fxTreeMap.setDataStroke(Color.WHITESMOKE);
         fxTreeMap.setDataBorderRadius(10.0);
         fxTreeMap.setPadding(5);
         //
-        CustomizableMapData<Country> customRootData = (CustomizableMapData<Country>) data.getLookup().lookup(CustomizableMapData.class);
-        customRootData.setValueFunction(o->o.getPopulation());
+        Timer timer = new Timer(4000, new ActionListener() {
+            private int count = 0;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (count % 2 == 0) {
+                    runLater(() -> data.setValueFunction(Country.AREA_F));
+                } else {
+                    runLater(() -> data.setValueFunction(Country.POPULATION_F));
+                }
+                count++;
+            }
+        });
+        timer.start();
         //
         return fxTreeMap;
     }

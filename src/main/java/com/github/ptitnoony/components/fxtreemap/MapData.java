@@ -25,13 +25,22 @@ package com.github.ptitnoony.components.fxtreemap;
 
 import java.beans.PropertyChangeListener;
 import java.util.List;
-import org.openide.util.Lookup;
 
 /**
  *
  * @author ahamon
  */
 public interface MapData {
+
+    /**
+     * Data type that represents whether a data is represents a single object
+     * (ie LEAF) or an aggregation of objects (ie NODE)
+     */
+    enum DataType {
+        LEAF, NODE
+    };
+
+    DataType getType();
 
     /**
      * Get the data value.
@@ -105,13 +114,5 @@ public interface MapData {
      * @param listener the listener to be removed
      */
     void removePropertyChangeListener(PropertyChangeListener listener);
-
-    /**
-     * To access additional features for any MapData without having to inherit
-     * from other classes.
-     *
-     * @return the MapData lookup
-     */
-    Lookup getLookup();
 
 }

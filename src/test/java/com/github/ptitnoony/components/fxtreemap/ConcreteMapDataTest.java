@@ -33,7 +33,7 @@ import static org.junit.Assert.*;
  *
  * @author ahamon
  */
-public class AggredatedDataTest {
+public class ConcreteMapDataTest {
 
     private static final Logger LOG = Logger.getGlobal();
 
@@ -42,7 +42,7 @@ public class AggredatedDataTest {
      */
     @Test
     public void testGetValue() {
-        AggredatedData instance = new AggredatedData();
+        ConcreteMapData instance = new ConcreteMapData();
         double expResult = 0.0;
         double result = instance.getValue();
         // assert initial value is 0
@@ -55,7 +55,7 @@ public class AggredatedDataTest {
     @Test
     public void testSetValue() {
         double newValue = 12.0;
-        AggredatedData instance = new AggredatedData();
+        ConcreteMapData instance = new ConcreteMapData();
         instance.setValue(newValue);
         assertEquals(newValue, instance.getValue(), TreeMapUtils.EPSILON);
     }
@@ -65,7 +65,7 @@ public class AggredatedDataTest {
      */
     @Test
     public void testGetName() {
-        AggredatedData instance = new AggredatedData();
+        ConcreteMapData instance = new ConcreteMapData();
         String expResult = "";
         String result = instance.getName();
         assertEquals(expResult, result);
@@ -77,7 +77,7 @@ public class AggredatedDataTest {
     @Test
     public void testSetName() {
         String newName = "myNewName";
-        AggredatedData instance = new AggredatedData();
+        ConcreteMapData instance = new ConcreteMapData();
         instance.setName(newName);
         assertEquals(newName, instance.getName());
     }
@@ -87,7 +87,7 @@ public class AggredatedDataTest {
      */
     @Test
     public void testGetChildrenData() {
-        AggredatedData instance = new AggredatedData();
+        ConcreteMapData instance = new ConcreteMapData();
         List<MapData> result = instance.getChildrenData();
         assertEquals(0, result.size());
     }
@@ -98,10 +98,10 @@ public class AggredatedDataTest {
      */
     @Test
     public void testGetChildrenDataModify() {
-        AggredatedData instance = new AggredatedData();
+        ConcreteMapData instance = new ConcreteMapData();
         List<MapData> result = instance.getChildrenData();
         try {
-            result.add(new SimpleMapData(12));
+            result.add(new ConcreteMapData(12));
             fail("Should not be able to add directly to the return of getChildrenData");
         } catch (Exception e) {
             LOG.log(Level.FINE, "testGetChildrenDataModify: normal behavior :: {0}", e);
@@ -113,7 +113,7 @@ public class AggredatedDataTest {
      */
     @Test
     public void testHasChildrenData() {
-        AggredatedData instance = new AggredatedData();
+        ConcreteMapData instance = new ConcreteMapData();
         boolean expResult = false;
         boolean result = instance.hasChildrenData();
         assertEquals(expResult, result);
@@ -124,11 +124,11 @@ public class AggredatedDataTest {
      */
     @Test
     public void testAddChildrenData() {
-        MapData data1 = new SimpleMapData("a", 1);
-        MapData data2 = new SimpleMapData("b", 2);
-        MapData data3 = new SimpleMapData("c", 3);
-        MapData data4 = new SimpleMapData("d", 4);
-        AggredatedData instance = new AggredatedData("d_abcd", data1, data2, data3, data4);
+        MapData data1 = new ConcreteMapData("a", 1);
+        MapData data2 = new ConcreteMapData("b", 2);
+        MapData data3 = new ConcreteMapData("c", 3);
+        MapData data4 = new ConcreteMapData("d", 4);
+        ConcreteMapData instance = new ConcreteMapData("d_abcd", data1, data2, data3, data4);
         List<MapData> allData = instance.getChildrenData();
         assertEquals(4, allData.size());
         assertTrue(allData.contains(data1));
@@ -146,11 +146,11 @@ public class AggredatedDataTest {
         double value2 = 2.0;
         double value3 = 3.0;
         double value4 = 4.0;
-        MapData data1 = new SimpleMapData("1.", value1);
-        MapData data2 = new SimpleMapData("2.", value2);
-        MapData data3 = new SimpleMapData("3.", value3);
-        MapData data4 = new SimpleMapData("4.", value4);
-        AggredatedData instance = new AggredatedData("d_1234", data1, data2, data3, data4);
+        MapData data1 = new ConcreteMapData("1.", value1);
+        MapData data2 = new ConcreteMapData("2.", value2);
+        MapData data3 = new ConcreteMapData("3.", value3);
+        MapData data4 = new ConcreteMapData("4.", value4);
+        ConcreteMapData instance = new ConcreteMapData("d_1234", data1, data2, data3, data4);
         double initValue = 10;
         assertEquals(initValue, instance.getValue(), TreeMapUtils.EPSILON);
         for (int i = 1; i < 100; i++) {
@@ -194,11 +194,11 @@ public class AggredatedDataTest {
         double value2 = 2.0;
         double value3 = 3.0;
         double value4 = 4.0;
-        MapData data1 = new SimpleMapData("1", value1);
-        MapData data2 = new SimpleMapData("2", value2);
-        MapData data3 = new SimpleMapData("3", value3);
-        MapData data4 = new SimpleMapData("4", value4);
-        AggredatedData instance = new AggredatedData("d_1234", data1, data2, data3, data4);
+        MapData data1 = new ConcreteMapData("1", value1);
+        MapData data2 = new ConcreteMapData("2", value2);
+        MapData data3 = new ConcreteMapData("3", value3);
+        MapData data4 = new ConcreteMapData("4", value4);
+        ConcreteMapData instance = new ConcreteMapData("d_1234", data1, data2, data3, data4);
 
         data1.setValue(5);
         assertEquals(14, instance.getValue(), TreeMapUtils.EPSILON);

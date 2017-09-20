@@ -48,10 +48,10 @@ The main examples are available in the `main` class. Here is an extract of the c
 ### Create the data set
 
 ```java
-        SimpleMapData data1 = new SimpleMapData("data1", 6.0);
+        ConcreteMapData data1 = new ConcreteMapData("data1", 6.0);
         ...
-        SimpleMapData data7 = new SimpleMapData("data7", 1.0);
-        AggredatedData data = new AggredatedData("data-set1", data1, data2, data3, data4, data5, data6, data7);
+        ConcreteMapData data7 = new ConcreteMapData("data7", 1.0);
+        ConcreteMapData data = new ConcreteMapData("data-set1", data1, data2, data3, data4, data5, data6, data7);
 ``` 
 
 ### Create the treemap component
@@ -90,4 +90,4 @@ The library provides a small example to illustrate the controls over the TreeMap
 - ~~update UI when data model is changed~~
 - use css styles
 - draw recursively in canvas example
-- draw names for each data item
+- ~~draw names for each data item~~

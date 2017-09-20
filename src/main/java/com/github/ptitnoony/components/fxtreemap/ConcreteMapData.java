@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 Arnaud Hamon
+ * Copyright 2017 H-K.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,77 +32,122 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.openide.util.lookup.AbstractLookup;
-import org.openide.util.lookup.InstanceContent;
 
 /**
  *
  * @author ahamon
  */
-public class AggredatedData implements MapData {
+public class ConcreteMapData implements MapData {
 
     private static final Logger LOG = Logger.getGlobal();
+    private static final String UNKNOWN_TYPE = "Unknown datatype:: ";
 
     private final PropertyChangeSupport propertyChangeSupport;
-    private final InstanceContent lookupContents = new InstanceContent();
-    private final AbstractLookup lookup = new AbstractLookup(lookupContents);
     private final List<MapData> datas;
     private String name;
     private double value;
     private double lastNotifiedValue;
+    private final DataType dataType;
 
     /**
-     * Creates an aggregated data from the given list of MapData.
+     * Create a new ConcreteMapData with the given name and value.
+     *
+     * @param dataName the data name
+     * @param dataValue the data value
+     */
+    public ConcreteMapData(String dataName, double dataValue) {
+        if (dataValue < 0.0) {
+            throw new IllegalArgumentException("value shall be positive, but was " + dataValue);
+        }
+        if (dataName == null) {
+            throw new IllegalArgumentException("name should not be null");
+        }
+        propertyChangeSupport = new PropertyChangeSupport(ConcreteMapData.this);
+        name = dataName;
+        value = dataValue;
+        datas = Collections.EMPTY_LIST;
+        dataType = DataType.LEAF;
+    }
+
+    /**
+     * Create a new ConcreteMapData with the given value and an empty name.
+     *
+     * @param dataValue the data value
+     */
+    public ConcreteMapData(double dataValue) {
+        this("", dataValue);
+    }
+    /**
+     * Create a new ConcreteMapData with the default value and an empty name.
+     *
+     */
+    public ConcreteMapData() {
+        this("", 0);
+    }
+
+    /**
+     * Creates a new ConcreteMapData from the given list of MapData.
      *
      * @param dataCollectionName the data name
      * @param dataElements list containing data to be aggregated as children
      */
-    public AggredatedData(String dataCollectionName, List<MapData> dataElements) {
-        propertyChangeSupport = new PropertyChangeSupport(AggredatedData.this);
+    public ConcreteMapData(String dataCollectionName, List<MapData> dataElements) {
+        propertyChangeSupport = new PropertyChangeSupport(ConcreteMapData.this);
         name = dataCollectionName;
         datas = new LinkedList<>(dataElements);
         datas.forEach(data -> data.addPropertyChangeListener(this::handleChildValueChanged));
         recalculate();
         lastNotifiedValue = value;
+        dataType = DataType.NODE;
     }
 
     /**
-     * Creates an aggregated data from the given data elements.
+     * Creates a new ConcreteMapData from the given data elements.
      *
      * @param dataCollectionName the data name
      * @param dataElements the data elements to be added as children
      */
-    public AggredatedData(String dataCollectionName, MapData... dataElements) {
+    public ConcreteMapData(String dataCollectionName, MapData... dataElements) {
         this(dataCollectionName, Arrays.asList(dataElements));
     }
 
     /**
-     * Creates a new AggredatedData with TreeMapUtils.DEFAULT_DATA_VALUE.
+     * Creates a new ConcreteMapData with TreeMapUtils.DEFAULT_DATA_VALUE.
      *
      * @param dataCollectionName the data name
+     * @param type the DataType
      */
-    public AggredatedData(String dataCollectionName) {
-        propertyChangeSupport = new PropertyChangeSupport(AggredatedData.this);
+    public ConcreteMapData(String dataCollectionName, DataType type) {
+        propertyChangeSupport = new PropertyChangeSupport(ConcreteMapData.this);
+        dataType = type;
         name = dataCollectionName;
-        datas = new LinkedList<>();
+        switch (dataType) {
+            case LEAF:
+                datas = Collections.EMPTY_LIST;
+                break;
+            case NODE:
+                datas = new LinkedList<>();
+                break;
+            default:
+                throw new IllegalArgumentException(UNKNOWN_TYPE + type);
+        }
         value = TreeMapUtils.DEFAULT_DATA_VALUE;
         lastNotifiedValue = value;
     }
 
-    /**
-     * Creates a new AggredatedData with TreeMapUtils.DEFAULT_DATA_VALUE.
-     */
-    public AggredatedData() {
-        this("");
-    }
-
-    protected final void addToLookup(Object o) {
-        lookupContents.add(o);
+    @Override
+    public DataType getType() {
+        return dataType;
     }
 
     @Override
-    public AbstractLookup getLookup() {
-        return lookup;
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    @Override
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
     @Override
@@ -113,20 +158,27 @@ public class AggredatedData implements MapData {
     @Override
     public void setValue(double newValue) {
         if (newValue < 0.0) {
+            LOG.log(Level.WARNING, "Ignoring set of a negative value ({0} for {1}", new Object[]{newValue, name});
             return;
         }
-        double percentage;
-        if (newValue < TreeMapUtils.EPSILON) {
-            percentage = 0.0;
-        } else {
-            percentage = newValue / value;
+        switch (dataType) {
+            case LEAF:
+                value = newValue;
+                break;
+            case NODE:
+                double percentage;
+                if (newValue < TreeMapUtils.EPSILON) {
+                    percentage = 0.0;
+                } else {
+                    percentage = newValue / value;
+                }
+                value = newValue;
+                datas.forEach(data -> data.setValue(data.getValue() * percentage));
+                break;
+            default:
+                throw new IllegalArgumentException(UNKNOWN_TYPE + dataType);
         }
-        //
-        value = newValue;
-        datas.forEach(data -> data.setValue(data.getValue() * percentage));
-        //
-        // not necessary since children already send notifications -> to be optimized at component level
-        notifyValueChanged();
+        propertyChangeSupport.firePropertyChange(TreeMapUtils.MAP_DATA_VALUE_CHANGED, null, value);
     }
 
     @Override
@@ -140,18 +192,13 @@ public class AggredatedData implements MapData {
     }
 
     @Override
-    public List<MapData> getChildrenData() {
-        return Collections.unmodifiableList(datas);
-    }
-
-    @Override
     public boolean hasChildrenData() {
         return !datas.isEmpty();
     }
 
     @Override
     public void addChildrenData(MapData data) {
-        if (data != null) {
+        if (dataType == DataType.NODE && data != null) {
             data.addPropertyChangeListener(this::handleChildValueChanged);
             datas.add(data);
             recalculate();
@@ -168,13 +215,8 @@ public class AggredatedData implements MapData {
     }
 
     @Override
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        propertyChangeSupport.addPropertyChangeListener(listener);
-    }
-
-    @Override
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        propertyChangeSupport.removePropertyChangeListener(listener);
+    public List<MapData> getChildrenData() {
+        return Collections.unmodifiableList(datas);
     }
 
     private void recalculate() {
@@ -194,4 +236,5 @@ public class AggredatedData implements MapData {
             lastNotifiedValue = value;
         }
     }
+
 }

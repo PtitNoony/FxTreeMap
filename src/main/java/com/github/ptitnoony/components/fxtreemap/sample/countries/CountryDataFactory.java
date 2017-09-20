@@ -23,8 +23,7 @@
  */
 package com.github.ptitnoony.components.fxtreemap.sample.countries;
 
-import com.github.ptitnoony.components.fxtreemap.AggregatedCustomizableMapData;
-import com.github.ptitnoony.components.fxtreemap.SimpleCustomizableMapData;
+import com.github.ptitnoony.components.fxtreemap.MapDataAdapter;
 
 /**
  *
@@ -36,15 +35,9 @@ public class CountryDataFactory {
         // private utility function
     }
 
-    public static AggregatedCustomizableMapData<Country> createEUData() {
-        AggregatedCustomizableMapData<Country> rootData = new AggregatedCustomizableMapData("European Union", Country.AREA_F);
-        Country.EU.forEach(c -> rootData.addChildrenData(CountryDataFactory.createCountryTreeMapData(c)));
+    public static MapDataAdapter<Country> createEUData() {
+        MapDataAdapter<Country> rootData = new MapDataAdapter("European Union", Country.EU, Country.AREA_F, Country.COUNTRY_NAME_F);
         return rootData;
-    }
-
-    public static SimpleCustomizableMapData<Country> createCountryTreeMapData(Country c) {
-        SimpleCustomizableMapData<Country> data = new SimpleCustomizableMapData(c, Country.COUNTRY_NAME_F, Country.AREA_F);
-        return data;
     }
 
 }

@@ -28,15 +28,41 @@ import java.util.List;
 /**
  *
  * @author ahamon
- * @param <T>
+ * @param <T> Class of the object contained in the adapter
  */
 public interface CustomizableMapData<T> extends MapData {
 
+    /**
+     * Method to get the function used to calculate the object(s) value.
+     *
+     * @return the function used to calculated the value of the object(s)
+     */
     DataValueFunction<T> getValueFunction();
 
+    /**
+     * Method to set the function used to calculate the object(s) value.
+     *
+     * @param function the function to be used to calculated the value of the
+     * object(s)
+     */
     void setValueFunction(DataValueFunction<T> function);
 
+    /**
+     * Method to get the object represented in the MapData.
+     *
+     * @return the object represented in the MapData
+     */
     T getObject();
 
+    /**
+     * Method to get the children object represented in the MapData.
+     *
+     * @return an unmodifiable list of the children data aggregated
+     */
     List<T> getChildrenObjects();
+
+    /**
+     * Method to force the update of the MapData value.
+     */
+    void update();
 }
