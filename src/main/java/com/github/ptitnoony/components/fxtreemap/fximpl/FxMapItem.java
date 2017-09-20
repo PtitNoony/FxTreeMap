@@ -72,7 +72,6 @@ public class FxMapItem implements MapItem {
     private Color strokeColor;
     private Color fillOverColor;
     private Color strokeOverColor;
-    private double strokeWidth = TreeMapStyle.DEFAULT_STROKE_WIDTH;
 
     public FxMapItem(FxMapModel model, MapData data) {
         mapModel = model;
@@ -169,8 +168,7 @@ public class FxMapItem implements MapItem {
      * @param newStrokeWidth the new map item stroke width
      */
     public void setStrokeWidth(double newStrokeWidth) {
-        strokeWidth = newStrokeWidth;
-        rectangle.setStrokeWidth(strokeWidth);
+        rectangle.setStrokeWidth(newStrokeWidth);
     }
 
     /**

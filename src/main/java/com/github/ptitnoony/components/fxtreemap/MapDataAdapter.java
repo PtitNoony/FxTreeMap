@@ -41,6 +41,7 @@ public class MapDataAdapter<T> implements CustomizableMapData<T> {
 
     private static final Logger LOG = Logger.getGlobal();
     private static final String UNKNOWN_TYPE = "Unknown datatype:: ";
+    private static final String VALUE_F_NULL_MESSAGE = "valueFunction should not be null";
 
     private final T dataObject;
     private final List<T> dataObjectList;
@@ -66,7 +67,7 @@ public class MapDataAdapter<T> implements CustomizableMapData<T> {
             throw new IllegalArgumentException("object should not be null");
         }
         if (valueFunction == null) {
-            throw new IllegalArgumentException("valueFunction should not be null");
+            throw new IllegalArgumentException(VALUE_F_NULL_MESSAGE);
         }
         if (nameFunction == null) {
             throw new IllegalArgumentException("nameFunction should not be null");
@@ -97,7 +98,7 @@ public class MapDataAdapter<T> implements CustomizableMapData<T> {
             throw new IllegalArgumentException("dataObjects should not be null");
         }
         if (valueFunction == null) {
-            throw new IllegalArgumentException("valueFunction should not be null");
+            throw new IllegalArgumentException(VALUE_F_NULL_MESSAGE);
         }
         propertyChangeSupport = new PropertyChangeSupport(MapDataAdapter.this);
         dataType = DataType.NODE;
