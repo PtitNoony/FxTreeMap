@@ -7,6 +7,10 @@ An JavaFx implementation of a treemap
 
 The original algorithm for the core code is derived from [javafx-chart-treemap](https://github.com/tasubo/javafx-chart-treemap).
 
+## Java Version
+
+This version is for Java 8.
+
 ## Disclaimer
 
 This small project is in its very early days and features may not be stable.
