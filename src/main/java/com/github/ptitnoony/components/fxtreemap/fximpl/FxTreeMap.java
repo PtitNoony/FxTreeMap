@@ -29,7 +29,6 @@ import com.github.ptitnoony.components.fxtreemap.TreeMap;
 import com.github.ptitnoony.components.fxtreemap.TreeMapLayout;
 import com.github.ptitnoony.components.fxtreemap.TreeMapStyle;
 import com.github.ptitnoony.components.fxtreemap.TreeMapUtils;
-import impl.org.controlsfx.skin.BreadCrumbBarSkin;
 import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,7 +46,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-
 import org.controlsfx.control.BreadCrumbBar;
 import org.controlsfx.control.BreadCrumbBar.BreadCrumbActionEvent;
 
@@ -107,7 +105,7 @@ public class FxTreeMap extends TreeMap {
         breadCrumbBar.setOnCrumbAction((BreadCrumbActionEvent<MapData> bae) -> handleBreadCrumbEvent(bae));
         breadCrumbBar.setCrumbFactory((TreeItem<MapData> param) -> {
             String label = param != null && param.getValue() != null ? param.getValue().getName() : "?";
-            return new BreadCrumbBarSkin.BreadCrumbButton(label);
+            return new BreadCrumbBar.BreadCrumbButton(label);
         });
         //
         runLater(() -> requestLayoutUpdate());
