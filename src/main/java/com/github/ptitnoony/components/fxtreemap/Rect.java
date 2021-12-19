@@ -40,7 +40,10 @@ public class Rect {
      */
     public static final double DEFAULT_HEIGHT = 1.0;
 
-    private double x, y, w, h;
+    private double x;
+    private double y;
+    private double w;
+    private double h;
 
     /**
      * Creates a new Rect at (0,0) with default width and height.
@@ -50,8 +53,7 @@ public class Rect {
     }
 
     /**
-     * Creates a new Rect using the same attributes values as the Rect given as
-     * parameter.
+     * Creates a new Rect using the same attributes values as the Rect given as parameter.
      *
      * @param r the Rect to be used for the attributes
      */
