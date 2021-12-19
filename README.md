@@ -2,14 +2,14 @@
 An JavaFx implementation of a treemap
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/627c82e4b6ed40fa9b5b78d7ea98f4f4)](https://www.codacy.com/app/PtitNoony/FxTreeMap?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=PtitNoony/FxTreeMap&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/384d2a1360004596a5af71a7440e696c)](https://www.codacy.com/gh/PtitNoony/FxTreeMap/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=PtitNoony/FxTreeMap&amp;utm_campaign=Badge_Grade)
 [![Dependency Status](https://www.versioneye.com/user/projects/597d42850fb24f005e87c771/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/597d42850fb24f005e87c771)
 
 The original algorithm for the core code is derived from [javafx-chart-treemap](https://github.com/tasubo/javafx-chart-treemap).
 
 ## Java Version
 
-This version is for Java 9.
+This version is for Java 17.
 
 ## Disclaimer
 
@@ -26,7 +26,7 @@ If using maven, one can add the following dependency:
 <dependency>
   <groupId>com.github.ptitnoony.components</groupId>
   <artifactId>fxtreemap</artifactId>
-  <version>0.2</version>
+  <version>0.5</version>
 </dependency>
 ```
 
@@ -91,7 +91,7 @@ The library provides a small example to illustrate the controls over the TreeMap
 
 ## Next steps
 
-- ~~update UI when data model is changed~~
-- use css styles
-- draw recursively in canvas example
-- ~~draw names for each data item~~
+  - ~~update UI when data model is changed~~
+  - use css styles
+  - draw recursively in canvas example
+  - ~~draw names for each data item~~
