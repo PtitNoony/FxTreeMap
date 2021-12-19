@@ -73,13 +73,11 @@ public class FxMapModel implements MapModel {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         switch (evt.getPropertyName()) {
-            case TreeMapUtils.ITEM_CLICKED:
+            case TreeMapUtils.ITEM_CLICKED ->
                 propertyChangeSupport.firePropertyChange(evt);
-                break;
-            case TreeMapStyle.STYLE_CHANGED:
+            case TreeMapStyle.STYLE_CHANGED ->
                 mapItems.forEach(item -> item.applyStyle(style));
-                break;
-            default:
+            default ->
                 throw new UnsupportedOperationException(evt.getPropertyName());
         }
     }

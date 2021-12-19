@@ -77,6 +77,7 @@ public class ConcreteMapData implements MapData {
     public ConcreteMapData(double dataValue) {
         this("", dataValue);
     }
+
     /**
      * Create a new ConcreteMapData with the default value and an empty name.
      *
@@ -122,13 +123,11 @@ public class ConcreteMapData implements MapData {
         dataType = type;
         name = dataCollectionName;
         switch (dataType) {
-            case LEAF:
+            case LEAF ->
                 datas = Collections.EMPTY_LIST;
-                break;
-            case NODE:
+            case NODE ->
                 datas = new LinkedList<>();
-                break;
-            default:
+            default ->
                 throw new IllegalArgumentException(UNKNOWN_TYPE + type);
         }
         value = TreeMapUtils.DEFAULT_DATA_VALUE;
@@ -162,10 +161,9 @@ public class ConcreteMapData implements MapData {
             return;
         }
         switch (dataType) {
-            case LEAF:
+            case LEAF ->
                 value = newValue;
-                break;
-            case NODE:
+            case NODE -> {
                 double percentage;
                 if (newValue < TreeMapUtils.EPSILON) {
                     percentage = 0.0;
@@ -174,8 +172,8 @@ public class ConcreteMapData implements MapData {
                 }
                 value = newValue;
                 datas.forEach(data -> data.setValue(data.getValue() * percentage));
-                break;
-            default:
+            }
+            default ->
                 throw new IllegalArgumentException(UNKNOWN_TYPE + dataType);
         }
         propertyChangeSupport.firePropertyChange(TreeMapUtils.MAP_DATA_VALUE_CHANGED, null, value);

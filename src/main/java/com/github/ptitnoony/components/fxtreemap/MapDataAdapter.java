@@ -210,14 +210,13 @@ public class MapDataAdapter<T> implements CustomizableMapData<T> {
 
     private void recalculate() {
         switch (dataType) {
-            case LEAF:
+            case LEAF ->
                 value = dataValueFunction.getValue(dataObject);
-                break;
-            case NODE:
+            case NODE -> {
                 dataAdapters.forEach(MapDataAdapter::recalculate);
                 value = dataAdapters.stream().mapToDouble(MapDataAdapter::getValue).sum();
-                break;
-            default:
+            }
+            default ->
                 throw new IllegalArgumentException(UNKNOWN_TYPE + dataType);
         }
         notifyValueChanged();
